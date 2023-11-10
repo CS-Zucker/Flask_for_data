@@ -17,57 +17,44 @@ CORS(app,supports_credentials=True)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method=='GET':
-        return render_template('demo_login.html')
+        return render_template('index.html')
     
-@app.route('/register', methods=['GET', 'POST'])
-def register_api():
-    if request.method=='GET':
-        return render_template('demo_login.html')
-    else:
-        name_form = request.form.get('user_name')
-        email_form = request.form.get('user_email')
-        pwd_form = request.form.get('user_pwd')
+# @app.route('/register', methods=['GET', 'POST'])
+# def register_api():
+#     if request.method=='GET':
+#         return render_template('demo_login.html')
+#     else:
+#         name_form = request.form.get('user_name')
+#         email_form = request.form.get('user_email')
+#         pwd_form = request.form.get('user_pwd')
 
-        res_dic = register_judge(name=name_form, email=email_form, pwd=pwd_form)
-        res_msg = res_dic['msg']
-        return render_template('demo_login.html', error_msg=str(res_msg))
+#         res_dic = register_judge(name=name_form, email=email_form, pwd=pwd_form)
+#         res_msg = res_dic['msg']
+#         return render_template('demo_login.html', error_msg=str(res_msg))
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login_api():
-    if request.method == 'GET':
-        return render_template('demo_login.html')
-    else:
-        user_form = request.form.get('user')
-        pwd_form = request.form.get('pwd')
-        print('用户名:',user_form,'  密码:',pwd_form)
+# @app.route('/login', methods=['GET', 'POST'])
+# def login_api():
+#     if request.method == 'GET':
+#         return render_template('demo_login.html')
+#     else:
+#         user_form = request.form.get('user')
+#         pwd_form = request.form.get('pwd')
+#         print('用户名:',user_form,'  密码:',pwd_form)
 
-        res_dic = login_judge(user=user_form, pwd=pwd_form)
-        res_msg = res_dic['msg']
-        res_code = res_dic['code']
-        print(res_msg)
-        if res_code==200 :
-            session['user'] = user_form
-            session.permanent = True
-            if user_form=='admin' :
-                return redirect(url_for('test'))
-            return redirect(url_for('test'))
-        return render_template('demo_login.html', error_msg=str(res_msg))
+#         res_dic = login_judge(user=user_form, pwd=pwd_form)
+#         res_msg = res_dic['msg']
+#         res_code = res_dic['code']
+#         print(res_msg)
+#         if res_code==200 :
+#             session['user'] = user_form
+#             session.permanent = True
+#             if user_form=='admin' :
+#                 return redirect(url_for('test'))
+#             return redirect(url_for('test'))
+#         return render_template('demo_login.html', error_msg=str(res_msg))
     
 
-
-
-
-@app.route('/test', methods=['GET', 'POST'])
-def test():
-    """
-    功能(个人中心界面): 根据"stu_id"从数据库中得到学生基本信息，用于个人中心信息显示
-    :return:
-    """
-    user_id = session.get('user')
-    print(user_id)
-    result = user_id
-    return render_template('index.html', result=result)
 
 
 # #############################  异常处理  ###########################

@@ -1,0 +1,136 @@
+<html>
+<head>
+<title>X Music</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<style>
+a:link {text-decoration: none;color:red;}
+a:visited {color:green;text-decoration:none;}
+a:hover  {color:blue;text-decoration:underline;}
+a:active {color:orange;text-decoration:blink;}
+</style>
+
+
+<script type="text/javascript">
+function saveStorage(id)
+{
+	var data = document.getElementById(id).value;
+	if(data.value != " ")
+	{
+    var time = new Date().getTime();
+    localStorage.setItem(time,data);
+    alert("❤❤❤提交成功❤❤❤");
+    loadStorage('msg');
+	}
+	else
+	{
+	alert("！！！请输入您的意见以及您在使用过程中遇到的问题！！！");
+	}
+}
+function loadStorage(id)
+{
+    var result = '<table border="0">';
+    for(var i = 0;i < localStorage.length;i++)
+    {
+        var key = localStorage.key(i);
+        var value = localStorage.getItem(key);
+        var date = new Date();
+        date.setTime(key);
+        var datestr = date.toGMTString();
+        result += '<tr><td>' + value + '</td><td>' + datestr + '</td></tr>';
+    }
+    result += '</table>';
+    var target = document.getElementById(id);
+    target.innerHTML = result;
+}
+function clearStorage()
+{
+ if(localStorage.length > 0)
+    {
+    if(window.confirm("清空记录后不可恢复，是否确认删除所有记录？"))
+    {
+    localStorage.clear();
+    alert("全部提交记录已被清除。");
+    loadStorage('msg');
+    }
+    }
+    else
+    {
+        alert("没有需要清空的记录！欢迎您的宝贵意见提交！");
+    } 
+}
+function clear()
+{
+for(i=0;i<document.all.tags("input").length;i++){
+		if(document.all.tags("input")[i].type=="text"){
+			document.all.tags("input")[i].value="";
+		}
+	}
+}
+</script>
+</head>
+
+<body style=" background-repeat:no-repeat ;background-size:100% 100%; background-attachment: fixed;" background="images/searchb.jpg" bgproperties="fixed" bgcolor="#000000" text="#FFFFFF" >
+<h1 align="center"><a href="index.html"><font color="#FF0000" face="华文彩云" size="20">X Music</font></a></h1>
+<h2 align="center" ><font color="#FFFFFF" face="黑体">听见 音乐的未知/遇见 美好的心情</font></h2>
+<hr width="100%" size="3" color="#FF0000" noshade="noshade">
+<br />
+
+<h2 align="left"><font color="#FFFFFF" face="微软雅黑" size="6">->问题反馈与服务中心</font></h2>
+<hr align= "left" width="30%" size="0.9" color="#FFFFFF" noshade="noshade">
+<br />
+<br />
+
+<form id="clearFrom">
+<div align="center">
+<textarea 
+id="memo" cols="100" rows="10"   style="background:transparent;border=4;color:#FFFFFF;font-size:26px;font-color:微软雅黑;"></textarea><br />
+<style>memeo="font-size:36px; color:#FFFFFF" </style>
+</div>
+<br />
+<div align="center">
+
+<input type="button" value="提交反馈" onclick="saveStorage('memo');">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<input type="button" value="查看记录" onclick="loadStorage('msg');">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="button" value="全部清除" onclick="clearStorage('msg');">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="button" value="重置内容" id="clearText"/>
+
+
+<p id="msg"></p>
+</div>
+</form>
+<script>
+    var _clearText=document.getElementById("clearText");
+    _clearText.onclick=function(){
+        var _elements=document.getElementById("clearFrom").elements,
+                _elementsLen=_elements.length,
+                _ei=null,
+                i=0;
+        for(;i<_elementsLen;i++){
+            _ei=_elements[i];
+            //如果是文本类型，将其修改为空
+            (_ei.type=="text"||_ei.type=="textarea")&&(_ei.value="");
+        }
+    }
+</script>
+<br />
+<br />
+<br />
+<br />
+
+
+<table  width="30%" border="0"  cellpadding="0" style="margin:auto;">
+<tr>
+<td><a href="about.html"><font color="#FFFFFF" face="微软雅黑" size="1">| 关于XM |</font></a></td>
+<td><a href="javascript:alert(APP正在马不停蹄的开发中，请先使用我们我的PC端网页版收听最好的音乐！)"><font color="#FFFFFF" face="微软雅黑" size="1">| 客户端 |</font></a></td>
+<td><a href="contact.html"><font color="#FFFFFF" face="微软雅黑" size="1">| 联系XM |</font></a></td>
+<td><a href="support.html"><font color="#FFFFFF" face="微软雅黑" size="1">| 问题中心 |</font></a></td>
+<td><a href="law.html"><font color="#FFFFFF" face="微软雅黑" size="1">| 法律支持 |</font></a></td>
+</table>
+<h1 align="center"><a href="index.html"><font color="#FF0000" face="华文彩云" size="20">X Music</font></a></h1>
+
+</body>
+</html>

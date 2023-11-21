@@ -1,71 +1,67 @@
-<html>
-<head>
-<title>X Music</title>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-<style>
-a:link {text-decoration: none;color:red;}
-a:visited {color:green;text-decoration:none;}
-a:hover  {color:blue;text-decoration:underline;}
-a:active {color:orange;text-decoration:blink;}
-</style>
+ {% extends "base.html" %}
+ {% block head %}
+<!-- JavaScript 函数，用于显示/隐藏元素 -->
 <SCRIPT>
     function isHidden(oDiv){
       var vDiv = document.getElementById(oDiv);
       vDiv.style.display = (vDiv.style.display == 'none')?'block':'none';
     }
 </SCRIPT>
+ <!-- JavaScript 函数，用于保存评论到本地存储 -->
 
-<script type="text/javascript">
-function saveStorage(id)
-{
-	var data = document.getElementById(id).value;
-	if(data.value != " ")
-	{
-    var time = new Date().getTime();
-    localStorage.setItem(time,data);
-    alert("❤❤❤评论成功❤❤❤");
-    loadStorage('msg');
-	}
-	else
-	{
-	alert("！！！请输入您对于这首歌的评论！！！");
-	}
+ <script>
+        function saveComment() {
+    // 获取文本域内容
+    var text = document.getElementById('memo').value;
+
+    // 发起 POST 请求到服务器
+    fetch('http://127.0.0.1:5000/zhegeruh/XMusic/save_comment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text: text })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // 处理服务器响应
+        if (data.status === 'success') {
+            alert('评论发布成功');
+            // 可以在这里执行其他操作，例如更新评论列表等
+        } else {
+            alert('评论发布失败: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('发生错误，请稍后重试');
+    });
 }
-function loadStorage(id)
-{
-    var result = '<table border="0">';
-    for(var i = 0;i < localStorage.length;i++)
-    {
-        var key = localStorage.key(i);
-        var value = localStorage.getItem(key);
-        var date = new Date();
-        date.setTime(key);
-        var datestr = date.toGMTString();
-        result += '<tr><td>' + value + '</td><td>' + datestr + '</td></tr>';
-    }
-    result += '</table>';
-    var target = document.getElementById(id);
-    target.innerHTML = result;
-}
-function clearStorage()
-{
- if(localStorage.length > 0)
-    {
-    if(window.confirm("重置评论后不可恢复，是否确认删除我的当前的评论？"))
-    {
-    localStorage.clear();
-    alert("您的当前评论已删除");
-    loadStorage('msg');
-    }
-    }
-    else
-    {
-        alert("没有需要删除的评论！期待您的评论！");
-    }
-	
-    
-}
-</script>
+
+        function updateCommentList() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/get_comments', true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var comments = JSON.parse(xhr.responseText);
+                    var commentList = document.getElementById('commentList');
+                    commentList.innerHTML = '';  // 清空评论列表
+
+                    comments.forEach(function(comment) {
+                        var listItem = document.createElement('li');
+                        listItem.textContent = comment.text;
+                        commentList.appendChild(listItem);
+                    });
+                }
+            };
+            xhr.send();
+        }
+
+        // 页面加载时更新评论列表
+        window.onload = function() {
+            updateCommentList();
+        };
+    </script>
 
 <style>
 body{
@@ -74,13 +70,12 @@ height:1000px;
 .rTop{
 width:100px; height:25px;
 text-align:center; font-size:small;
-line-height:25px; border:1px solid #999;
-position:fixed; right:0; bottom:0;
-border-bottom-color:#FF0000; 
-border-top-color:#FF0000; 
-border-left-color:#FF0000; 
-border-right-color:#FF0000; margin:5px;
-cursor:pointer; display:none
+line-height:25px;
+	position:fixed; right:0; bottom:0;
+	border: 1px solid #FF0000;
+	margin:5px;
+cursor:pointer;/* 鼠标悬停时显示手型光标 */
+	display:none/* 初始状态下按钮不可见 */
 }
 </style>
 <style>
@@ -108,45 +103,27 @@ window.scrollTo('0','0');
 document.getElementById('rTop').style.display="none"
 }
 </script>
+{% endblock %}
 
-</head>
 
-<body style=" background-repeat:no-repeat ;background-size:100% 100%; background-attachment: fixed;" background="../static/images/微信图片_20180928235725 (2).jpg" bgproperties="fixed" bgcolor="#000000" text="#FFFFFF" >
+<body style=" background-repeat:no-repeat ;
+background-size:100% 100%;
+background-attachment: fixed;" background="../static/images/微信图片_20180928235725%20(2).jpg" bgproperties="fixed" bgcolor="#000000" text="#FFFFFF" >
 <div class="rTop" id="rTop" onClick="toTop()"><font color="#FFFFFF"><b>↑↑↑返回顶部</b></font></div>
 
-<table width="100%" border="0"  cellpadding="0" height="77">
-<tr>
-<td align="left" width="300"><h1 align="center"><a href="index.html"><font color="#FF0000" face="华文彩云" size="20">X Music</font></a></h1></td>
-<td align="right"><a href="account.html"><font color="#FFFFFF" face="黑体" size="4">我的</font></a></td>
-<td align="right"><a href="discovery.html"><font color="#FFFFFF" face="黑体" size="4">推荐</font></a></td>
-<td align="right"><a href="library.html"><font color="#FFFFFF" face="黑体" size="4">乐库</font></a></td>
-<td align="right"><a href="news.html"><font color="#FFFFFF" face="黑体" size="4"><b>看点</b></font></a></td>
-<td align="right"><a href="chart.html"><font color="#FFFFFF" face="黑体" size="4">排行</font></a></td>
-<td align="right"><a href="mv.html"><font color="#FFFFFF" face="黑体" size="4">视频</font></a></td>
-<td align="right"><a href="search.html"><font color="#FFFFFF" face="黑体" size="4">搜索</font></a></td>
-<td align="right"><a href="single.html"><font color="#FFFFFF" face="黑体" size="6">立刻听歌</font></a></td>
-</tr>
-</table>
-
-<hr width="100%" size="3" color="#FF0000" noshade="noshade">
-
+{% block body %}
 <br />
 <br />
 <br />
-
-
-
-
 
 <div style="border: 0px solid #000000; width: 1000px; margin: 0 auto;">
-<h1 align="left"><a href=" "><font color="#FFFFFF" face="微软雅黑" size="8"><b>年少有为</b></font></a></h1>
+<h1 align="left"><a href=" "><font color="#FFFFFF" face="微软雅黑" size="8"><b>{{ song.MusicName }}</b></font></a></h1>
 <h1 align="left"><font color="#FFFFFF" face="微软雅黑" size="3">&nbsp;&nbsp;&nbsp;&nbsp;歌手：</font><a href="singer.html"><font color="#FFFFFF" face="微软雅黑" size="3">李荣浩</font></a></h1>
 <h1 align="left"><font color="#FFFFFF" face="微软雅黑" size="3">&nbsp;&nbsp;&nbsp;&nbsp;所属专辑：</font><a href="album.html"><font color="#FFFFFF" face="微软雅黑" size="3">耳朵</font></a></h1>
 <div>
 <audio controls>
-  
-  <source src="../static/musics/06：41 A.M. - 林峯.mp3" >
-<br />
+  <source src="{{song.StorageLocation}}" type="audio/mpeg">
+  Your browser does not support the audio element.
 </audio>
 </div>
 <br />
@@ -155,20 +132,50 @@ document.getElementById('rTop').style.display="none"
 
 <tr>
 
-	<td><a href=" "><font color="#FFFFFF">收藏歌曲♥</font></a></td>
-	<td><button type="button" id="btn2"><font color="#FFFFFF" face="微软雅黑" size="3">下载歌曲▼</font></button></td>
-	<td><a href="video.html"><font color="#FFFFFF">播放MV▶</font></a></td>
-	<td><a href=" "><font color="#FFFFFF">分享歌曲✈</font></a></td>
-	<td><a href="#评论"><font color="#FFFFFF">查看评论▦</font></a></td>
+	<td><a href="#" id="musicButton"><font color="#FFFFFF">音乐试听</font></a></td>
+	<td><button type="button" id="btn2"><font color="#FFFFFF" face="微软雅黑" size="3">下载歌曲</font></button></td>
+	<td><a href=""><font color="#FFFFFF">购买歌曲</font></a></td>
+	<td><a href=" "><font color="#FFFFFF">分享歌曲</font></a></td>
+	<td><a href="#评论"><font color="#FFFFFF">查看评论</font></a></td>
 
 
 </table>
+<script>
+var musicButton = document.getElementById('musicButton');
+
+// 检查是否支持 addEventListener
+if (musicButton.addEventListener) {
+  // 支持 addEventListener
+  musicButton.addEventListener('click', playMusic);
+} else if (musicButton.attachEvent) {
+  // 使用 attachEvent 在 IE 中添加事件监听器
+  musicButton.attachEvent('onclick', playMusic);
+} else {
+  // 两者都不支持，提供一种备选方案或友好提示
+  console.error('该浏览器不支持添加事件监听器。');
+}
+
+function playMusic() {
+  var audio = new Audio('file://{{ audio_url }}');
+
+  // 监听 timeupdate 事件，当音频播放时间超过 20 秒时停止播放
+  audio.addEventListener('timeupdate', function () {
+    if (audio.currentTime >= 5) {
+      audio.pause();
+    }
+  });
+
+  // 开始播放音频
+  audio.play();
+}
+</script>
+
 <br />
 <div>
 	<style>
 		*{
-			margin: 2;
-			padding: 2;
+			margin: 2px;
+			padding: 2px;
 		}
 		.left,.right{
 			
@@ -274,19 +281,40 @@ document.getElementById('rTop').style.display="none"
 <br />
 </div>
 <div style="border: 0px solid #000000; width: 1000px; margin: 0 auto;">
-<h1 align="left"><a name="评论"><font color="#FFFFFF" face="微软雅黑" size="6"><b>评论▦</b></font></a></h1>
+<style>
+  h1 {
+    text-align: left; /* 左对齐 */
+  }
+
+  /* 使用 class 或 id 来选择元素并应用样式 */
+  .comment-heading {
+    color: #FFFFFF; /* 白色字体颜色 */
+    font-family: "微软雅黑", sans-serif; /* 使用微软雅黑字体 */
+    font-size: 1.5em; /* 相当于原来的 size="6" */
+    font-weight: bold; /* 加粗 */
+  }
+</style>
+
+<!-- 使用样式 -->
+<h1 class="comment-heading"><a name="评论">评论▦</a></h1>
+
 
 <form id="clearFrom">
 <div align="center">
-<textarea 
-id="memo" cols="93" rows="3"   style="background:transparent;border=4;color:#FFFFFF;font-size:20px;font-color:微软雅黑;"></textarea><br />
-<style>memeo="font-size:36px; color:#FFFFFF" </style>
+  <textarea
+    id="memo"
+    cols="93"
+    rows="3"
+    style="background: transparent; border: 4px solid; color: #FFFFFF; font-size: 20px; font-family: 微软雅黑;">
+  </textarea><br />
+  <style>#memo { font-size: 36px; color: #FFFFFF; }</style>
 </div>
+
 
 
 <div align="right">
 
-<input type="button" value="发布评论" onclick="saveStorage('memo');">
+<input type="button" value="发布评论" onclick="saveComment();">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <input type="button" value="查看评论" onclick="loadStorage('msg');">
@@ -805,18 +833,11 @@ id="memo" cols="93" rows="3"   style="background:transparent;border=4;color:#FFF
 
 
 </div>
+{% endblock %}
 
-<table align="center" width="40%" border="0"  cellpadding="0" style="margin:auto;">
-<tr>
-<td><a href="about.html"><font color="#FFFFFF" face="微软雅黑" size="1">| 关于XM |</font></a></td>
-<td><a href="javascript:alert(APP正在马不停蹄的开发中，请先使用我们我的PC端网页版收听最好的音乐！)"><font color="#FFFFFF" face="微软雅黑" size="1">| 客户端 |</font></a></td>
-<td><a href="contact.html"><font color="#FFFFFF" face="微软雅黑" size="1">| 联系XM |</font></a></td>
-<td><a href="support.html"><font color="#FFFFFF" face="微软雅黑" size="1">| 问题中心 |</font></a></td>
-<td><a href="law.html"><font color="#FFFFFF" face="微软雅黑" size="1">| 法律支持 |</font></a></td>
-</table>
-<h1 align="center"><a href="index.html"><font color="#FF0000" face="华文彩云" size="20">X Music</font></a></h1>
 
-<script src="../static/js/down.js"></script>
+{% block link %}
+<script src="../js/down.js"></script>
 <script>
 	$(function(){
 
@@ -826,7 +847,7 @@ id="memo" cols="93" rows="3"   style="background:transparent;border=4;color:#FFF
 		$eleBtn2.click(function(){
 			var $eleForm = $("<form method='get'></form>");
 
-			$eleForm.attr("action","../static/musics/06：41 A.M. - 林峯.mp3");
+			$eleForm.attr("action","musics/06：41 A.M. - 林峯.mp3");
 
 			$(document.body).append($eleForm);
 
@@ -835,7 +856,4 @@ id="memo" cols="93" rows="3"   style="background:transparent;border=4;color:#FFF
 		});
 	})
 </script>
-</body>
-
-</html>
-
+{% endblock %}

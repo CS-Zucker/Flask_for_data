@@ -1,15 +1,5 @@
-<html>
-<head>
-<title>X Music</title>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-<style>
-a:link {text-decoration: none;color:red;}
-a:visited {color:green;text-decoration:none;}
-a:hover  {color:blue;text-decoration:underline;}
-a:active {color:orange;text-decoration:blink;}
-.1 {
-}
-</style>
+ {% extends "base.html" %}
+ {% block head %}
 <SCRIPT>
     function isHidden(oDiv){
       var vDiv = document.getElementById(oDiv);
@@ -50,26 +40,8 @@ document.getElementById('rTop').style.display="none"
 }
 </script>
 
-</head>
-
-<body bgcolor="#000000" text="#FFFFFF" >
-<div class="rTop" id="rTop" onClick="toTop()"><font color="#FFFFFF"><b>↑↑↑返回顶部</b></font></div>
-<table width="100%" border="0"  cellpadding="0" height="77">
-<tr>
-<td align="left" width="300"><h1 align="center"><a href="index.html"><font color="#FF0000" face="华文彩云" size="20">X Music</font></a></h1></td>
-<td align="right"><a href="account.html"><font color="#FFFFFF" face="黑体" size="4">我的</font></a></td>
-<td align="right"><a href="discovery.html"><font color="#FFFFFF" face="黑体" size="4">推荐</font></a></td>
-<td align="right"><a href="library.html"><font color="#FFFFFF" face="黑体" size="6"><b>乐库</b></font></a></td>
-<td align="right"><a href="news.html"><font color="#FFFFFF" face="黑体" size="4">看点</font></a></td>
-<td align="right"><a href="chart.html"><font color="#FFFFFF" face="黑体" size="4">排行</font></a></td>
-<td align="right"><a href="mv.html"><font color="#FFFFFF" face="黑体" size="4">视频</font></a></td>
-<td align="right"><a href="search.html"><font color="#FFFFFF" face="黑体" size="4">搜索</font></a></td>
-<td align="right"><a href="single.html"><font color="#FFFFFF" face="黑体" size="4">立刻听歌</font></a></td>
-</tr>
-</table>
-<hr width="100%" size="3" color="#FF0000" noshade="noshade">
-
-
+{% endblock %}
+ {% block body %}
 <div style="border: 1px solid #000000; width: 1200px; margin: 0 auto;">	
 
 <table width="1200"  border="0" cellspacing="3" align="center">
@@ -157,26 +129,23 @@ document.getElementById('rTop').style.display="none"
 </table>
 
 <table  width="100%" border="0" align="center" cellpadding="5" style="font_size:16px" color="#FFFFFF" style="margin:auto;">
-<tr>
-	<td><a href="single.html"><img src="../static/images/7066195351418187465.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
-	<td><a href="single.html"><img src="../static/images/21003723191470712635.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
-	<td><a href="single.html"><img src="../static/images/21003372621469680510.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
-	<td><a href="single.html"><img src="../static/images/21002904081458280614.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
-	<td><a href="single.html"><img src="../static/images/3059791379063569.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
-	<td><a href="single.html"><img src="../static/images/1675891330309511.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
-	<td><a href="single.html"><img src="../static/images/1674421470122216.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
-	<td><a href="single.html"><img src="../static/images/15374364697909.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
-</tr>
+ {% for song in songs %}
 
+
+	<td><a href="{{ url_for('music.single', id=song.MusicID) }}"><img src="../static/images/6818201434681820.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
+
+
+
+ {% endfor %}
 <tr>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -198,14 +167,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href="single.html"><img src="../static/images/15296684855164.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -248,14 +217,14 @@ document.getElementById('rTop').style.display="none"
 </tr>
 
 <tr>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -277,14 +246,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href="single.html"><img src="../static/images/15296684855164.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="singer.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -327,14 +296,14 @@ document.getElementById('rTop').style.display="none"
 </tr>
 
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -356,14 +325,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href=""><img src="../static/images/10763538371390532842.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -408,14 +377,14 @@ document.getElementById('rTop').style.display="none"
 </tr>
 
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -437,14 +406,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href=""><img src="../static/images/15296684855164.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -487,14 +456,14 @@ document.getElementById('rTop').style.display="none"
 </tr>
 
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -516,14 +485,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href=""><img src="../static/images/15296684855164.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -566,14 +535,14 @@ document.getElementById('rTop').style.display="none"
 </tr>
 
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -595,14 +564,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href=""><img src="../static/images/10763538371390532842.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -644,14 +613,14 @@ document.getElementById('rTop').style.display="none"
 </tr>
 
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -673,14 +642,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href=""><img src="../static/images/15296684855164.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -723,14 +692,14 @@ document.getElementById('rTop').style.display="none"
 </tr>
 
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -752,14 +721,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href=""><img src="../static/images/15296684855164.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -802,14 +771,14 @@ document.getElementById('rTop').style.display="none"
 </tr>
 
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -831,14 +800,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href=""><img src="../static/images/10763538371390532842.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -880,14 +849,14 @@ document.getElementById('rTop').style.display="none"
 </tr>
 
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -909,14 +878,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href=""><img src="../static/images/15296684855164.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -959,14 +928,14 @@ document.getElementById('rTop').style.display="none"
 </tr>
 
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -988,14 +957,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href=""><img src="../static/images/15296684855164.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -1038,14 +1007,14 @@ document.getElementById('rTop').style.display="none"
 </tr>
 
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -1067,14 +1036,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href=""><img src="../static/images/10763538371390532842.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -1116,14 +1085,14 @@ document.getElementById('rTop').style.display="none"
 </tr>
 
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -1145,14 +1114,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href=""><img src="../static/images/15296684855164.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -1195,14 +1164,14 @@ document.getElementById('rTop').style.display="none"
 </tr>
 
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -1224,14 +1193,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href=""><img src="../static/images/15296684855164.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -1274,14 +1243,14 @@ document.getElementById('rTop').style.display="none"
 </tr>
 
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -1303,14 +1272,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href=""><img src="../static/images/10763538371390532842.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -1352,14 +1321,14 @@ document.getElementById('rTop').style.display="none"
 </tr>
 
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈粒</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小半</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李宗盛</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬后青春的诗</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬光辉岁月Beyond</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬阿黛尔Adode</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈粒</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小半</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李宗盛</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬后青春的诗</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬光辉岁月Beyond</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬阿黛尔Adode</font></a></td>
 </tr>
 
 
@@ -1381,14 +1350,14 @@ document.getElementById('rTop').style.display="none"
 	<td><a href=""><img src="../static/images/15296684855164.jpg@1e_1c_100Q_100w_100h" height="100" width="100" /></a></td>
 	</tr>
 <tr>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬马頔</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬小幸运</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬红文字5</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬世界</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬五月天</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬李健</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬森林乐队</font></a></td>
-<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑"size="2">♬陈奕迅</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬马頔</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬小幸运</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬红文字5</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬世界</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬五月天</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬李健</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬森林乐队</font></a></td>
+<td><a href="discovery.html"><font color="#6C6C6C" face="微软雅黑" size="2">♬陈奕迅</font></a></td>
 </tr>
 
 
@@ -1479,18 +1448,5 @@ document.getElementById('rTop').style.display="none"
 
 <br />
 <br />
-<table  width="30%" border="0"  cellpadding="0" style="margin:auto;">
-<tr>
-<td><a href="about.html"><font color="#FFFFFF" face="微软雅黑" size="1">| 关于XM |</font></a></td>
-<td><a href="javascript:alert(APP正在马不停蹄的开发中，请先使用我们我的PC端网页版收听最好的音乐！)"><font color="#FFFFFF" face="微软雅黑" size="1">| 客户端 |</font></a></td>
-<td><a href="contact.html"><font color="#FFFFFF" face="微软雅黑" size="1">| 联系XM |</font></a></td>
-<td><a href="support.html"><font color="#FFFFFF" face="微软雅黑" size="1">| 问题中心 |</font></a></td>
-<td><a href="law.html"><font color="#FFFFFF" face="微软雅黑" size="1">| 法律支持 |</font></a></td>
-</table>
-<h1 align="center"><a href="index.html"><font color="#FF0000" face="华文彩云" size="20">X Music</font></a></h1>
-
-
-</body>
-
-</html>
+ {% endblock %}
 

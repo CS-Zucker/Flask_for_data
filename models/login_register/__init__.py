@@ -1,3 +1,0 @@
-#在init这个文件里实例化函数
-from models.login_register.login_db import login_judge
-from models.login_register.register_db import register_judge

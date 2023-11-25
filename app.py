@@ -6,7 +6,7 @@ from flask_migrate import Migrate
 from blueprints.auth import bp as auth_bp
 from blueprints.music import bp as music_bp
 from blueprints.operate import bp as operate_bp
-
+from blueprints.admin import bp as admin_bp
 
 app = Flask(__name__)
 app.config.from_object(config)  # 绑定配置文件
@@ -14,10 +14,11 @@ app.config.from_object(config)  # 绑定配置文件
 db.init_app(app)  # 告诉 Flask，我们的应用将使用 Flask-SQLAlchemy 来管理数据库
 mail.init_app(app)  # 设置 Flask-Mail，这个扩展用于发送邮件
 migrate = Migrate(app, db)  # 初始化 Flask-Migrate。Flask-Migrate 是一个用于 Flask 的数据库迁移扩展
-
 app.register_blueprint(auth_bp)  # 注册蓝图（Blueprints）
 app.register_blueprint(music_bp)
 app.register_blueprint(operate_bp)
+app.register_blueprint(admin_bp)
+app.secret_key='meng'  # 加密闪现消息
 @app.before_request
 def my_before_request():  # 钩子函数
     user_id = session.get("user_id")

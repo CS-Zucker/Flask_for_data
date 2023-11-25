@@ -55,6 +55,15 @@
 							<div class="col-md-5 col-sm-5 col-xs-5">
 									<button type="submit" class="tm-btn-subscribe">注册</button>
 								</div>
+							{% with messages = get_flashed_messages() %}
+							  {% if messages %}
+								<ul class="col-md-5 col-sm-5 col-xs-5">
+								{% for message in messages %}
+								  <li>{{ message }}</li>
+								{% endfor %}
+								</ul>
+							  {% endif %}
+							{% endwith %}
 
 
 

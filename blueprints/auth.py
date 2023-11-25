@@ -1,10 +1,10 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session,g
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session, g, flash
 from exts import mail, db
 from flask_mail import Message
 import string
 import random
 from models import EmailCaptchaModel
-from .forms import RegisterForm, LoginForm, PersonalForm
+from .forms import RegisterForm, LoginForm, PersonalForm, RepasswordForm
 from models import UserModel
 from decorators import login_required
 
@@ -21,6 +21,7 @@ def login():
             password = form.Password.data
             user = UserModel.query.filter_by(Email=email).first()  # 查找邮箱
             if not user:  # 邮箱不存在
+                flash("邮箱不存在")
                 print("邮箱不存在")
                 return redirect(url_for("auth.login"))
             else:
@@ -29,9 +30,13 @@ def login():
                     session['user_id'] = user.UserID
                     return redirect("/")
                 else:
+                    flash("邮箱不存在")
                     print("密码错误")
                     return redirect(url_for("auth.login"))
         else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'错误：{error} ')
             print(form.errors)
             return redirect(url_for("auth.login"))  # 登录失败要重新渲染
 
@@ -57,6 +62,9 @@ def register():
             db.session.commit()
             return redirect(url_for("auth.login"))  # 把视图函数转换成url 蓝图.视图函数
         else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'错误：{error} ')
             print(form.errors)
             return redirect(url_for("auth.register"))
 
@@ -82,13 +90,37 @@ def personal(user_id):
             user.ContactNumber = form.ContactNumber.data
             user.sex = form.sex.data
             db.session.commit()
-            return "修改成功"  # 把视图函数转换成url 蓝图.视图函数
+            flash("修改成功")
+            return redirect(url_for('music.index'))
         else:
             print(form.errors)
             return redirect(url_for("auth.personal", user_id=g.user.UserID))
 
-
-
+#  找回密码
+@bp.route("/repassword", methods=['GET', 'POST'])
+def repassword():
+    if request.method == 'GET':
+        return render_template("repassword.html")
+    else:
+        form = RepasswordForm(request.form)  # 获取前端用户提交的form数据扔给registerform进行验证
+        email = form.Email.data
+        user = UserModel.query.filter_by(Email=email).first()
+        if not user:  # 邮箱不存在
+            flash("邮箱不存在")
+            print("邮箱不存在")
+            return redirect(url_for("auth.repassword"))
+        else:
+            if form.validate():  # 调用验证器和验证函数
+                user.Password = form.Password.data
+                db.session.commit()
+                flash("成功找回密码")
+                return redirect(url_for("auth.login"))  # 把视图函数转换成url 蓝图.视图函数
+            else:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        flash(f'错误：{error} ')
+                print(form.errors)
+                return redirect(url_for("auth.repassword"))
 
 # 默认get请求
 @bp.route("/captcha/email")  # 获取邮箱生成验证码发送验证码

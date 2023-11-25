@@ -24,12 +24,24 @@
 			                      <input name="Email" type="text" class="form-control"  placeholder="请输入邮箱" required/>
 				  			</div>
 
-							<p class="tm-social-icons-container text-xs-center"><font size="3px" color="#FFFFFF">>>没有账号？立即<a href="register">注册</a>--------------------------------------------</font></p>
+							<p class="tm-social-icons-container text-xs-center"><font size="3px" color="#FFFFFF">>>没有账号？立即<a href="{{url_for('auth.register')}}">注册</a>--------------------------------------------</font></p>
 							<div class="col-md-7 col-sm-7 col-xs-7">
 									  <input name="Password" type="password" class="form-control" placeholder="请输入密码" required/>
 								</div>
 								<div class="col-md-5 col-sm-5 col-xs-5">
 									<button type="submit" class="tm-btn-subscribe">登录</button>
+								</div>
+							<p class="tm-social-icons-container text-xs-center"><font size="3px" color="#FFFFFF">>>忘记密码？立即<a href="{{url_for('auth.repassword')}}">找回</a>--------------------------------------------</font></p>
+							<div class="col-md-5 col-sm-5 col-xs-5">
+									{% with messages = get_flashed_messages() %}
+									  {% if messages %}
+										<ul class="flashes">
+										{% for message in messages %}
+										  <li>{{ message }}</li>
+										{% endfor %}
+										</ul>
+									  {% endif %}
+									{% endwith %}
 								</div>
 
 

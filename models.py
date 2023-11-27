@@ -98,7 +98,7 @@ def get_songs(musicname):
     song_singer = db.session.query(MusicModel, SingerModel).\
         join(SingingModel, MusicModel.MusicID == SingingModel.MusicID).\
         join(SingerModel, SingerModel.SingerID == SingingModel.SingerID).\
-        filter(MusicModel.MusicName == musicname).all()
+        filter(MusicModel.MusicName.contains(musicname)).all()
     # 使用 join 连接这三个表，连接条件是 MusicModel 的 MusicID 等于 SingingModel 的 MusicID
     #               以及 SingerModel 的 SingerID 等于 SingingModel 的 SingerID
     # filter 条件是 MusicModel 的 MusicName 等于 '给定歌名'
@@ -107,5 +107,17 @@ def get_songs(musicname):
     # 其中第一个元素是MusicModel实例对象，第二个元素是SingerModel实例对象。
     return song_singer
 
-
+def get_songs_(singername):
+    # 查询给定歌首的所有歌曲信息
+    singer_song = db.session.query(MusicModel, SingerModel).\
+        join(SingingModel, MusicModel.MusicID == SingingModel.MusicID).\
+        join(SingerModel, SingerModel.SingerID == SingingModel.SingerID).\
+        filter(SingerModel.Singer.contains(singername)).all()
+    # 使用 join 连接这三个表，连接条件是 MusicModel 的 MusicID 等于 SingingModel 的 MusicID
+    #               以及 SingerModel 的 SingerID 等于 SingingModel 的 SingerID
+    # filter 条件是 SingerModel.Singer 等于 '给定歌首'
+    # all() 方法返回所有符合条件的记录
+    # singer_song是一个包含多个元组的列表。每个元组对应一个符合查询条件的记录
+    # 其中第一个元素是MusicModel实例对象，第二个元素是SingerModel实例对象。
+    return singer_song
 

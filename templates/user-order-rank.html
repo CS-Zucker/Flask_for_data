@@ -34,7 +34,6 @@
       </div>
       <xblock>
         <a class="layui-btn" href="{{url_for('operate.user_list')}}">返回用户列表</a>
-          <a class="layui-btn" href="{{url_for('operate.user_add')}}">添加</a>
       </xblock>
         {% with messages = get_flashed_messages() %}
           {% if messages %}
@@ -55,19 +54,21 @@
             <th>性别</th>
             <th>手机</th>
             <th>邮箱</th>
+            <th>购买次数</th>
             <th>操作</th></tr>
         </thead>
         <tbody>
-        {% if paginate %}
+        {% if paginate is not none %}
 			 {% for user in paginate.items %}<!-- users.items返回的是user对象 -->
              <tr>
                  {% set i=loop.index+12*(paginate.page-1) %}
                 <td>{{ i }}</td>
-                <td>{{user.UserID}}</td>
-                <td>{{user.UserName}}</td>
-                <td>{{user.sex}}</td>
-                <td>{{user.ContactNumber}}</td>
-                <td>{{user.Email}}</td>
+                <td>{{user_orders.UserID}}</td>
+                <td>{{user_orders.UserName}}</td>
+                <td>{{user_orders.sex}}</td>
+                <td>{{user_orders.ContactNumber}}</td>
+                <td>{{user_orders.Email}}</td>
+                <td>{{user_orders.Email}}</td>
                 <td class="td-manage">
                     <a title="编辑"   href="{{url_for('operate.user_edit',user_id=user.UserID)}}">编辑</a>
                 <i class="layui-icon">&#xe642;</i>
@@ -81,7 +82,7 @@
              {% for user in users %}
                 <tr>
                     {% if paginate is not none %}
-                    {% set i=loop.index+paginate.per_page*(paginate.page-1) %}
+                    {% set i=loop.index+12*(paginate.page-1) %}
                     <td>{{ i }}</td>
                     {% else %}
                     <td>{{ loop.index }}</td>
@@ -104,7 +105,7 @@
         </tbody>
       </table>
       <div class="page">
-        <div>
+          <div>
           {% if paginate%}
           <!-- 左一页 -->
           {% if paginate.has_prev %} <!-- 没有左页就不显示左标签-->

@@ -7,7 +7,7 @@ from blueprints.auth import bp as auth_bp
 from blueprints.music import bp as music_bp
 from blueprints.operate import bp as operate_bp
 from blueprints.admin import bp as admin_bp
-
+from blueprints.view import bp as view_bp
 app = Flask(__name__)
 app.config.from_object(config)  # 绑定配置文件
 # 与db绑定
@@ -18,6 +18,7 @@ app.register_blueprint(auth_bp)  # 注册蓝图（Blueprints）
 app.register_blueprint(music_bp)
 app.register_blueprint(operate_bp)
 app.register_blueprint(admin_bp)
+app.register_blueprint(view_bp)
 app.secret_key='meng'  # 加密闪现消息
 @app.before_request
 def my_before_request():  # 钩子函数

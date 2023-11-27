@@ -75,6 +75,7 @@ def logout():
 
 # 个人中心
 @bp.route("/personal/<string:user_id>", methods=['GET', 'POST'])
+
 def personal(user_id):
     if request.method == 'GET':
         user = UserModel.query.get(user_id)

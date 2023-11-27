@@ -31,6 +31,15 @@
                     </form>
                     
 					<div class="tm-social-icons-container text-xs-center">
+						{% with messages = get_flashed_messages() %}
+						{% if messages %}
+						<ul class="flashes">
+							{% for message in messages %}
+							<li>{{ message }}</li>
+							{% endfor %}
+						</ul>
+						{% endif %}
+						{% endwith %}
 	                    <p>大家都在搜:</p>
 	                    <p><a href="single.html" ><font size="3px" color="#FFFFFF">①.星球坠落-艾热\李佳隆</font></a>
 	                    <a href="single.html" ><font size="3px" color="#FFFFFF">②.满舒克</font></a>

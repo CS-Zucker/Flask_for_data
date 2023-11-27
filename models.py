@@ -107,6 +107,7 @@ def get_songs(musicname):
     # 其中第一个元素是MusicModel实例对象，第二个元素是SingerModel实例对象。
     return song_singer
 
+
 def get_songs_(singername):
     # 查询给定歌首的所有歌曲信息
     singer_song = db.session.query(MusicModel, SingerModel).\
@@ -120,4 +121,61 @@ def get_songs_(singername):
     # singer_song是一个包含多个元组的列表。每个元组对应一个符合查询条件的记录
     # 其中第一个元素是MusicModel实例对象，第二个元素是SingerModel实例对象。
     return singer_song
+
+def get_songs_for_chart():
+    # 执行查询
+    chart_music_info = db.session.query(
+        ChartModel.ChartType,
+        CRankModel.SongRank,
+        MusicModel.MusicID,
+        MusicModel.MusicName,
+        SingerModel.SingerID,
+        SingerModel.Singer
+    ).join(
+        CRankModel,
+        ChartModel.ChartID == CRankModel.ChartID
+    ).join(
+        MusicModel,
+        CRankModel.MusicID == MusicModel.MusicID
+    ).join(
+        SingingModel,
+        SingingModel.MusicID == MusicModel.MusicID
+    ).join(
+        SingerModel,
+        SingingModel.SingerID == SingerModel.SingerID
+    ).order_by(
+        ChartModel.ChartID,
+        CRankModel.SongRank
+    ).all()
+    chart_music_dict = {}
+    for result in chart_music_info:
+        chart_type = result.ChartType
+        # 创建音乐信息字典
+        music_info = {
+            'MusicRank': result.SongRank,
+            'MusicID': result.MusicID,
+            'MusicName': result.MusicName,
+            'SingerID': result.SingerID,
+            'Singer': result.Singer
+        }
+        # 检查榜单是否已存在于字典中
+        if chart_type in chart_music_dict:
+            # 将音乐信息添加到现有榜单条目的值中
+            chart_music_dict[chart_type].append(music_info)
+        else:
+            # 创建新的榜单条目并设置音乐信息为值
+            chart_music_dict[chart_type] = [music_info]
+    
+    # for chart_type, music_info_list in chart_music_dict.items():
+    #     print("===============")
+    #     print(f"榜单: {chart_type}")
+    #     for music_info in music_info_list:
+    #         print(f"音乐排名: {music_info['MusicRank']}")
+    #         print(f"音乐ID: {music_info['MusicID']}")
+    #         print(f"音乐名称: {music_info['MusicName']}")
+    #         print(f"歌手ID: {music_info['SingerID']}")
+    #         print(f"歌手: {music_info['Singer']}")
+    #         print()
+    return chart_music_dict
+
 

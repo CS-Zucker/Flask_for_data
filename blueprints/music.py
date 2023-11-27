@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from models import MusicModel
+from models import *
 bp = Blueprint("music", __name__, url_prefix="/")
 
 @bp.route('/')
@@ -7,6 +7,12 @@ def index():
     musics = MusicModel.query.all()
 
     return render_template('library.html', songs=musics)
+
+@bp.route('/chart', methods=['GET', 'POST'])
+def chart(): 
+    # 执行查询
+    chart_music_dict = get_songs_for_chart()
+    return render_template('chart.html', chart_music_dict=chart_music_dict)
 
 #  播放歌曲
 @bp.route('/single/<int:id>')

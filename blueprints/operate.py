@@ -4,6 +4,7 @@ from exts import db
 from models import CommentModel, UserModel, OrderModel, OrderingModel
 from models import get_songs, get_songs_
 from .forms import AddUserForm, EditUserForm
+from decorators import login_required
 bp = Blueprint("operate", __name__, url_prefix="/operate")
 # 定义用一些操作
 

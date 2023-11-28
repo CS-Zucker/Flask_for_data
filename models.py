@@ -1,4 +1,4 @@
-
+from sqlalchemy import func, desc
 from exts import db
 
 class UserModel(db.Model):
@@ -62,7 +62,7 @@ class ChartModel(db.Model):
 class CRankModel(db.Model):
     __tablename__ = '登榜'
     MusicID = db.Column(db.Integer, db.ForeignKey('音乐.MusicID'), primary_key=True)
-    ChartID = db.Column(db.Integer, db.ForeignKey('音乐.MusicID'), primary_key=True)
+    ChartID = db.Column(db.Integer, db.ForeignKey('榜单.ChartID'), primary_key=True)
     SongRanking = db.Column(db.Integer, nullable=False)
 
 class OrderModel(db.Model):
@@ -179,3 +179,22 @@ def get_songs_for_chart():
     return chart_music_dict
 
 
+def user_order_rank():
+
+    # 创建查询语句
+
+    result = db.session.query(
+            UserModel.UserID,
+            MusicModel.MusicID,
+            MusicModel.MusicName,
+            OrderingModel.OrderID,
+            func.count(OrderingModel.OrderID).label('order_count')
+        ).join(OrderingModel, OrderModel.OrderID == OrderingModel.OrderID
+        ).join(MusicModel, OrderingModel.MusicID == MusicModel.MusicID
+        ).join(UserModel, UserModel.UserID == OrderModel.UserID
+        ).group_by(UserModel.UserID, MusicModel.MusicID, MusicModel.MusicName
+        ).order_by(desc('order_count')).all()  # 按照下单次数降序排列
+
+    # 打印结果
+    for row in result:
+        print(row)

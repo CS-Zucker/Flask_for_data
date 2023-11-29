@@ -95,7 +95,7 @@ class EditUserForm(wtforms.Form):  # 继承wtforms.Form
     def validate_Email(self, filed):  # filed指Email
         Email = filed.data
         user = UserModel.query.filter_by(Email=Email).first()   # 返回第一个与邮箱一样
-        if user:  # 不为空
+        if user:
             raise wtforms.ValidationError(message="该邮箱已被注册")  # 抛出异常
 
 

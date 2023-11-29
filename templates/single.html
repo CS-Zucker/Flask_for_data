@@ -13,9 +13,10 @@
         function saveComment() {
     // 获取文本域内容
     var text = document.getElementById('memo').value;
+    window.location.href='http://127.0.0.1:5000/save_comment';
 
     // 发起 POST 请求到服务器
-    fetch('http://127.0.0.1:5000/zhegeruh/XMusic/save_comment', {
+    fetch('http://127.0.0.1:5000/save_comment', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

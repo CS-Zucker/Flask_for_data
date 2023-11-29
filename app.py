@@ -12,6 +12,8 @@ app = Flask(__name__)
 app.config.from_object(config)  # 绑定配置文件
 # 与db绑定
 db.init_app(app)  # 告诉 Flask，我们的应用将使用 Flask-SQLAlchemy 来管理数据库
+
+
 mail.init_app(app)  # 设置 Flask-Mail，这个扩展用于发送邮件
 migrate = Migrate(app, db)  # 初始化 Flask-Migrate。Flask-Migrate 是一个用于 Flask 的数据库迁移扩展
 app.register_blueprint(auth_bp)  # 注册蓝图（Blueprints）
@@ -44,7 +46,7 @@ def handle_403_miss(e):
 # 404错误
 @app.errorhandler(404)
 def handle_404_error(e):
-    return render_template('error-404.html'), 404
+     return render_template('error-404.html'), 404
 
 
 # 405错误

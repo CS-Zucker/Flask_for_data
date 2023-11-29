@@ -1,22 +1,91 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash, session
-from models import CommentModel, UserModel, OrderModel, OrderingModel, user_order_rank
-from sqlalchemy import func
-
+from flask import Blueprint,request, render_template,flash,redirect,url_for
+from sqlalchemy import text
 #一些可视化
+from exts import engine
 bp = Blueprint("view", __name__, url_prefix="/admin/view")
 @bp.route('/user_order_rank',methods=['GET','POST'])
 def user_order_rank():
     if request.method == 'GET':
-        page = request.args.get("page", type=int, default=1)  # 当没有参数时默认为一,转成整形很重要，默认为string
-        # 分页器对象
-        paginate = UserModel.query.paginate(page=page, per_page=12)  # 当前页和每页展示多少数据
-        user_order_rank()
-        return 'ok'
-
-        # return render_template("user-order-rank.html", paginate=paginate, user_orders=user_orders )  # 把paginate对象传到前端
+        user_order_rank = text("""
+        SELECT u.UserID,u.UserName,u.MusicName,us.OrderCount
+        FROM userorder_view AS u,user_order_rankview AS us
+        WHERE u.UserID = us.UserID
+        ORDER BY       
+            OrderCount DESC;
+        """)
+        with engine.connect() as conn:
+            result = conn.execute(user_order_rank).fetchall()  # 执行sql
+        # for row in result:
+        #     print("UserID: ", row.UserID)
+        #     print("UserName: ", row.UserName)
+        #     print("MusicName: ", row.MusicName)
+        #     print("OrderCount: ", row.OrderCount)
+        #     print()
+        return render_template('user-order-rank.html',result=result)
     else:
         user_id = request.form.get("userid")  # 要搜索用户id
         if user_id == '':
-            return redirect(url_for("operate.user_list"))  # 当没有
+            flash("请输入数据")
+            return redirect(url_for("view.user_order_rank"))  # 当没有
         else:
-            return redirect(url_for("user-order-rank.html", user_id=user_id))
+            user_order_rank_search = text("""
+                    SELECT u.UserID,u.UserName,u.MusicName,us.OrderCount
+                    FROM userorder_view AS u,user_order_rankview AS us
+                    WHERE u.UserID = us.UserID AND u.UserID =:userid;
+                    """)
+            with engine.connect() as conn:
+                result_ = conn.execute(user_order_rank_search, {"userid": user_id}).fetchall()  # 执行sql
+            if not result_:
+                flash("不存在此用户")
+                user_order_rank = text("""
+                       SELECT u.UserID,u.UserName,u.MusicName,us.OrderCount
+                       FROM userorder_view AS u,user_order_rankview AS us
+                       WHERE u.UserID = us.UserID
+                       ORDER BY       
+                           OrderCount DESC;
+                       """)
+                with engine.connect() as conn:
+                    result = conn.execute(user_order_rank).fetchall()  # 执行sql
+                    return render_template('user-order-rank.html', result=result)
+            else:
+                return render_template('user-order-rank.html', result=result_)
+@bp.route('/song_sales',methods=['GET','POST'])
+def song_sales():
+    if request.method == 'GET':
+        user_order_rank = text("""
+        SELECT u.UserID,u.UserName,u.MusicName,us.OrderCount
+        FROM userorder_view AS u,user_order_rankview AS us
+        WHERE u.UserID = us.UserID
+        ORDER BY       
+            OrderCount DESC;
+        """)
+        with engine.connect() as conn:
+            result = conn.execute(user_order_rank).fetchall()  # 执行sql
+        return render_template('user-order-rank.html',result=result)
+    else:
+        user_id = request.form.get("userid")  # 要搜索用户id
+        if user_id == '':
+            flash("请输入数据")
+            return redirect(url_for("view.user_order_rank"))  # 当没有
+        else:
+            user_order_rank_search = text("""
+                    SELECT u.UserID,u.UserName,u.MusicName,us.OrderCount
+                    FROM userorder_view AS u,user_order_rankview AS us
+                    WHERE u.UserID = us.UserID AND u.UserID =:userid;
+                    """)
+            with engine.connect() as conn:
+                result_ = conn.execute(user_order_rank_search, {"userid": user_id}).fetchall()  # 执行sql
+            if not result_:
+                flash("不存在此用户")
+                user_order_rank = text("""
+                       SELECT u.UserID,u.UserName,u.MusicName,us.OrderCount
+                       FROM userorder_view AS u,user_order_rankview AS us
+                       WHERE u.UserID = us.UserID
+                       ORDER BY       
+                           OrderCount DESC;
+                       """)
+                with engine.connect() as conn:
+                    result = conn.execute(user_order_rank).fetchall()  # 执行sql
+                    return render_template('user-order-rank.html', result=result)
+            else:
+                return render_template('user-order-rank.html', result=result_)

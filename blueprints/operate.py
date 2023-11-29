@@ -23,26 +23,6 @@ def search():
         singer_songs = get_songs_(singer)
         return render_template("search_result.html",  song_singers=song_singers, singer_songs=singer_songs)  # 把song_singers也传入前端
 
-# 评论
-@bp.route('/save_comment', methods=['POST'])
-def save_comment():
-    try:
-        # 从JSON请求中获取评论文本
-        data = request.get_json()
-        text = data.get('text', '')
-
-        if text:
-            # 创建 Comment 对象并保存到数据库
-            new_comment = CommentModel(Content=text)
-            db.session.add(new_comment)
-            db.session.commit()
-            return jsonify({'status': 'success'})
-        else:
-            return jsonify({'status': 'error', 'message': 'Comment text is empty'})
-
-    except Exception as e:
-        # 处理可能出现的错误
-        return jsonify({'status': 'error', 'message': str(e)})
 
 # 显示所有用户的信息
 @bp.route('/user_list',methods=['GET','POST'])

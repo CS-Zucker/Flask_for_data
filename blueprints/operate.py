@@ -5,6 +5,7 @@ from exts import db
 from models import *
 from .forms import *
 from decorators import login_required
+from datetime import datetime
 bp = Blueprint("operate", __name__, url_prefix="/operate")
 # 定义用一些操作
 
@@ -150,7 +151,7 @@ def music_list():
 # 删除指定音乐的信息
 @bp.route('/music_delete/<string:music_id>')
 def music_delete(music_id):
-    drop_music = MusicModel.query.get(music_id)  # 删除音乐
+    drop_music = MusicModel.query.get(music_id)  # 删除音乐的id
     db.session.delete(drop_music)
     db.session.commit()
     return redirect(url_for("operate.music_list"))
@@ -231,3 +232,275 @@ def music_edit(music_id):
                     flash(f'错误：{error} ')
             print(form.errors)
             return redirect(url_for("operate.music_edit", music_id=music_id))
+
+@bp.route('/comment_list',methods=['GET','POST'])
+def comment_list():
+    if request.method == 'GET':
+        page = request.args.get("page", type=int, default=1)   # 当没有参数时默认为一,转成整形很重要，默认为string
+
+        paginate = CommentModel.query.paginate(page=page, per_page=10)
+
+        # 从UserModel中提取music_id和user_id
+        user_ids = [comment.UserID for comment in paginate.items]
+        music_ids = [comment.MusicID for comment in paginate.items]
+        contents = [comment.Content for comment in paginate.items]
+        comment_ids = [comment.CommentID for comment in paginate.items]
+        comment_times = [comment.CommentTime for comment in paginate.items]
+
+        # 查询MusicModel和UserModel，获取对应的musicname和username
+        music_names = MusicModel.query.filter(MusicModel.MusicID.in_(music_ids)).all()
+        user_names = UserModel.query.filter(UserModel.UserID.in_(user_ids)).all()
+
+        # 创建字典以便于在模板中使用
+        comment_data = {}
+        for comment in paginate.items:
+            comment_data[comment.CommentID] = {
+                'music_id': comment.MusicID,
+                'user_id': comment.UserID,
+                'content': comment.Content,
+                'comment_id': comment.CommentID,
+                'comment_time':comment.CommentTime,
+                'music_name': next((music.MusicName for music in music_names if music.MusicID == comment.MusicID), None),
+                'user_name': next((user.UserName for user in user_names if user.UserID == comment.UserID), None),
+                # 添加其他评论相关信息
+            }
+
+        return render_template("comment_list.html", paginate=paginate,comment_datas=comment_data)  # 把paginate对象传到前端
+    else:
+        user_id = request.form.get("userid")
+        music_name = request.form.get("musicname")
+        comment_content = request.form.get("commentcontent")
+        if user_id:
+            return redirect(url_for("operate.comment_user_search", username=user_id))
+        elif music_name:
+
+
+                return redirect(url_for("operate.comment_music_search", musicname=music_name))
+
+        elif comment_content:
+
+            return redirect(url_for("operate.comment_comment_search", comment=comment_content))
+        else:
+            return redirect(url_for("operate.comment_list"))
+
+
+@bp.route('/comment_delete/<string:comment_id>')
+def comment_delete(comment_id):
+    comment = CommentModel.query.get(comment_id)  # 获取评论
+    if comment:
+        deleted_comment_id = comment.CommentID  # 保存要删除的评论ID
+        db.session.delete(comment)  # 删除评论
+
+
+        # 更新比被删除评论ID大的其他评论的ID
+        CommentModel.query.filter(CommentModel.CommentID > deleted_comment_id).update(
+            {CommentModel.CommentID: CommentModel.CommentID - 1},
+            synchronize_session=False
+        )
+        db.session.commit()
+
+    return redirect(url_for("operate.comment_list"))
+
+@bp.route('/comment_user_search/<string:username>',methods=['GET','POST'])
+def comment_user_search(username):
+    if request.method == 'GET':
+        page = request.args.get("page", type=int, default=1)  # 当没有参数时默认为一,转成整形很重要，默认为string
+        # 分页器对象
+        user = UserModel.query.filter( UserModel.UserName == username).first()
+
+        if user:
+         paginate = CommentModel.query.filter(CommentModel.UserID == user.UserID).paginate(page=page, per_page=10)
+
+
+
+         user_ids = [comment.UserID for comment in paginate.items]
+         music_ids = [comment.MusicID for comment in paginate.items]
+         contents = [comment.Content for comment in paginate.items]
+         comment_ids = [comment.CommentID for comment in paginate.items]
+         comment_times = [comment.CommentTime for comment in paginate.items]
+
+        # 查询MusicModel和UserModel，获取对应的musicname和username
+         music_names = MusicModel.query.filter(MusicModel.MusicID.in_(music_ids)).all()
+         user_names = UserModel.query.filter(UserModel.UserID.in_(user_ids)).all()
+
+        # 创建字典以便于在模板中使用
+         comment_data = {}
+         for comment in paginate.items:
+            comment_data[comment.CommentID] = {
+                'music_id': comment.MusicID,
+                'user_id': comment.UserID,
+                'content': comment.Content,
+                'comment_id': comment.CommentID,
+                'comment_time': comment.CommentTime,
+                'music_name': next((music.MusicName for music in music_names if music.MusicID == comment.MusicID),
+                                   None),
+                'user_name': next((user.UserName for user in user_names if user.UserID == comment.UserID), None),
+                # 添加其他评论相关信息
+            }
+
+         return render_template("comment_list.html", paginate=paginate, comment_datas=comment_data)  # 把paginate对象传到前端
+        else:
+            # 处理找不到用户的情况
+            flash('找不到指定用户名的用户。')
+            return redirect(url_for('operate.comment_list'))
+    else:
+        user_id = request.form.get("userid")
+        music_name = request.form.get("musicname")
+        comment_content = request.form.get("commentcontent")
+        if user_id:
+            return redirect(url_for("operate.comment_user_search", username=user_id))
+        elif music_name:
+
+            return redirect(url_for("operate.comment_music_search", musicname=music_name))
+
+        elif comment_content:
+
+            return redirect(url_for("operate.comment_comment_search", comment=comment_content))
+        else:
+            return redirect(url_for("operate.comment_list"))
+@bp.route('/comment_music_search/<string:musicname>',methods=['GET','POST'])
+def comment_music_search(musicname):
+    if request.method == 'GET':
+        page = request.args.get("page", type=int, default=1)  # 当没有参数时默认为一,转成整形很重要，默认为string
+        # 分页器对象
+        music = MusicModel.query.filter( MusicModel.MusicName == musicname).first()
+
+        if music:
+         paginate = CommentModel.query.filter(CommentModel.MusicID == music.MusicID).paginate(page=page, per_page=10)
+
+
+
+         user_ids = [comment.UserID for comment in paginate.items]
+         music_ids = [comment.MusicID for comment in paginate.items]
+         contents = [comment.Content for comment in paginate.items]
+         comment_ids = [comment.CommentID for comment in paginate.items]
+         comment_times = [comment.CommentTime for comment in paginate.items]
+
+        # 查询MusicModel和UserModel，获取对应的musicname和username
+         music_names = MusicModel.query.filter(MusicModel.MusicID.in_(music_ids)).all()
+         user_names = UserModel.query.filter(UserModel.UserID.in_(user_ids)).all()
+
+        # 创建字典以便于在模板中使用
+         comment_data = {}
+         for comment in paginate.items:
+            comment_data[comment.CommentID] = {
+                'music_id': comment.MusicID,
+                'user_id': comment.UserID,
+                'content': comment.Content,
+                'comment_id': comment.CommentID,
+                'comment_time': comment.CommentTime,
+                'music_name': next((music.MusicName for music in music_names if music.MusicID == comment.MusicID),
+                                   None),
+                'user_name': next((user.UserName for user in user_names if user.UserID == comment.UserID), None),
+                # 添加其他评论相关信息
+            }
+
+         return render_template("comment_list.html", paginate=paginate, comment_datas=comment_data)  # 把paginate对象传到前端
+        else:
+            # 处理找不到用户的情况
+            flash('找不到指定音乐名的音乐。')
+            return redirect(url_for('operate.comment_list'))
+    else:
+        user_id = request.form.get("userid")
+        music_name = request.form.get("musicname")
+        comment_content = request.form.get("commentcontent")
+        if user_id:
+            return redirect(url_for("operate.comment_user_search", username=user_id))
+        elif music_name:
+
+            return redirect(url_for("operate.comment_music_search", musicname=music_name))
+
+        elif comment_content:
+
+            return redirect(url_for("operate.comment_comment_search", comment=comment_content))
+        else:
+            return redirect(url_for("operate.comment_list"))
+
+@bp.route('/comment_comment_search/<string:comment>',methods=['GET','POST'])
+def comment_comment_search(comment):
+    if request.method == 'GET':
+        page = request.args.get("page", type=int, default=1)  # 当没有参数时默认为一,转成整形很重要，默认为string
+        # 分页器对象
+        com = CommentModel.query.filter(CommentModel.Content == comment).first()
+
+        if com:
+         paginate = CommentModel.query.filter(func.trim(CommentModel.Content) == com.Content).paginate(page=page, per_page=10)
+
+
+         user_ids = [comment.UserID for comment in paginate.items]
+         music_ids = [comment.MusicID for comment in paginate.items]
+         contents = [comment.Content for comment in paginate.items]
+         comment_ids = [comment.CommentID for comment in paginate.items]
+         comment_times = [comment.CommentTime for comment in paginate.items]
+
+        # 查询MusicModel和UserModel，获取对应的musicname和username
+         music_names = MusicModel.query.filter(MusicModel.MusicID.in_(music_ids)).all()
+         user_names = UserModel.query.filter(UserModel.UserID.in_(user_ids)).all()
+
+        # 创建字典以便于在模板中使用
+         comment_data = {}
+         for comment in paginate.items:
+            comment_data[comment.CommentID] = {
+                'music_id': comment.MusicID,
+                'user_id': comment.UserID,
+                'content': comment.Content,
+                'comment_id': comment.CommentID,
+                'comment_time': comment.CommentTime,
+                'music_name': next((music.MusicName for music in music_names if music.MusicID == comment.MusicID),
+                                   None),
+                'user_name': next((user.UserName for user in user_names if user.UserID == comment.UserID), None),
+                # 添加其他评论相关信息
+            }
+
+         return render_template("comment_list.html", paginate=paginate, comment_datas=comment_data)  # 把paginate对象传到前端
+        else:
+            # 处理找不到用户的情况
+            flash('找不到指定内容的评论。')
+            return redirect(url_for('operate.comment_list'))
+    else:
+        user_id = request.form.get("userid")
+        music_name = request.form.get("musicname")
+        comment_content = request.form.get("commentcontent")
+        if user_id:
+            return redirect(url_for("operate.comment_user_search", username=user_id))
+        elif music_name:
+
+            return redirect(url_for("operate.comment_music_search", musicname=music_name))
+
+        elif comment_content:
+
+            return redirect(url_for("operate.comment_comment_search", comment=comment_content))
+        else:
+            return redirect(url_for("operate.comment_list"))
+
+@bp.route('/ad_list')
+def ad_list():
+    page = request.args.get('page', 1, type=int)
+    paginate = AdvertisingID.query.paginate(page=page, per_page=10)
+    return render_template('ad_list.html', paginate=paginate)
+
+@bp.route('/ad_add', methods=['GET', 'POST'])
+def ad_add():
+    if request.method == 'POST':
+        title = request.form['title']
+        abstract = request.form['abstract']
+        content = request.form['content']
+        picture = request.form['picture']
+        release_time = datetime.utcnow()
+        new_ad = AdvertisingID(title=title, Abstract=abstract, content=content, Picture=picture,ReleaseTime=release_time)
+        db.session.add(new_ad)
+        db.session.commit()
+
+        flash('广告添加成功', 'success')
+        return redirect(url_for('operate.ad_list'))
+
+    return render_template('ad_add.html')
+
+@bp.route('/ad_delete/<int:ad_id>')
+def ad_delete(ad_id):
+    ad =AdvertisingID.query.get_or_404(ad_id)
+    db.session.delete(ad)
+    db.session.commit()
+
+    flash('广告删除成功', 'success')
+    return redirect(url_for('operate.ad_list'))

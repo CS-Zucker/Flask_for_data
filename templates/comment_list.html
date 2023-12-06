@@ -1,0 +1,166 @@
+<html>
+  
+  <head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/font.css')}}">
+	<link rel="stylesheet" href="{{url_for('static', filename='css/xadmin.css')}}">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="{{url_for('static', filename='lib/layui/layui.js')}}" charset="utf-8"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/xadmin.js')}}"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  
+  <body>
+    <div class="x-nav">
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+      <div class="layui-row">
+        <form class="layui-form layui-col-md12 x-so" method="Post">
+           <input type="text" name="userid"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
+           <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i>搜索用户</button>
+
+
+                <input type="text" name="musicname" placeholder="请输入音乐名称" autocomplete="off" class="layui-input">
+                <button class="layui-btn" lay-submit="" lay-filter="searchMusic"><i class="layui-icon">&#xe615;</i>搜索音乐</button>
+
+
+                <input type="text" name="commentcontent" placeholder="请输入评论内容" autocomplete="off" class="layui-input">
+                <button class="layui-btn" lay-submit="" lay-filter="searchComment"><i class="layui-icon">&#xe615;</i>搜索评论</button>
+            </form>
+            </div>
+
+
+
+        </div>
+
+      <xblock>
+        <a class="layui-btn" href="{{url_for('operate.comment_list')}}">返回评论列表</a>
+      </xblock>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class="flashes">
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+      <table class="layui-table">
+        <thead>
+          <tr>
+
+            <th>评论ID</th>
+            <th>内容</th>
+            <th>评论时间</th>
+            <th>音乐ID</th>
+            <th>音乐名称</th>
+            <th>用户ID</th>
+            <th>用户名称</th>
+            <th>操作</th></tr>
+        </thead>
+        <tbody>
+        {% if paginate is not none %}
+        {% set i = 1 %}
+			 {% for comment_id, comment_data in comment_datas.items() %}
+        <tr>
+
+            <td>{{ comment_data['comment_id'] }}</td>
+            <td>{{ comment_data['content'] }}</td>
+            <td>{{ comment_data['comment_time'] }}</td>
+            <td>{{ comment_data['music_id'] }}</td>
+            <td>{{ comment_data['music_name'] }}</td>
+            <td>{{ comment_data['user_id'] }}</td>
+            <td>{{ comment_data['user_name'] }}</td>
+                <td class="td-manage">
+
+                <i class="layui-icon">&#xe642;</i>
+                  <button title="删除" onclick="member_del(this,'{{ comment_id }}')" >删除</button>
+                    <i class="layui-icon">&#xe640;</i>
+
+                </td>
+              </tr>
+            {% set i = i+1 %}
+			{% endfor %}
+        {% else %}
+        {% set i = 1 %}
+             {% for user in users %}
+                <tr>
+                    <td>{{ i }}
+                    </td>
+                    <td>{{user.UserID}}</td>
+                    <td>{{user.UserName}}</td>
+                    <td>{{user.sex}}</td>
+                    <td>{{user.ContactNumber}}</td>
+                    <td>{{user.Email}}</td>
+                    <td class="td-manage">
+                      <button title="删除" onclick="member_del(this, '{{ comment_data['comment_id'] }}')">删除</button>
+                        <i class="layui-icon">&#xe640;</i>
+                      </a>
+                    </td>
+                  </tr>
+        {% set i = i+1 %}
+        {% endfor %}
+        {% endif %}
+        </tbody>
+      </table>
+
+    </div>
+    <script>
+      layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#end' //指定元素
+        });
+      });
+
+
+
+      /*用户-删除*/
+        function member_del(obj,id, callback){
+            layer.confirm('确认要删除吗？',function(index){
+                //发异步删除数据
+                $(obj).parents("tr").remove();
+                layer.msg('已删除!',{icon:1,time:1000});
+                window.location.href="/operate/comment_delete/" + id;
+            });
+        }
+
+
+      function delAll (argument) {
+
+        var data = tableCheck.getData();
+  
+        layer.confirm('确认要删除吗？'+data,function(index){
+            //捉到所有被选中的，发异步进行删除
+            layer.msg('删除成功', {icon: 1});
+            $(".layui-form-checked").not('.header').parents('tr').remove();
+        });
+      }
+    </script>
+    <script>var _hmt = _hmt || []; (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();</script>
+  </body>
+
+</html>

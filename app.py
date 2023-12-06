@@ -1,6 +1,7 @@
-from flask import Flask, session, g, render_template
+from flask import Flask, session, g, render_template, jsonify, request
 from exts import db, mail
 import config
+from datetime import datetime
 from models import UserModel
 from flask_migrate import Migrate
 from blueprints.auth import bp as auth_bp
@@ -8,6 +9,8 @@ from blueprints.music import bp as music_bp
 from blueprints.operate import bp as operate_bp
 from blueprints.admin import bp as admin_bp
 from blueprints.view import bp as view_bp
+from models import CommentModel
+from decorators import login_required
 app = Flask(__name__)
 app.config.from_object(config)  # 绑定配置文件
 # 与db绑定
@@ -59,5 +62,71 @@ def handle_405_error(e):
 @app.errorhandler(500)
 def handle_500_error(e):
     return render_template('error-500.html'), 500
+
+@app.route('/save_comment', methods=['POST'])
+@login_required
+def save_comment():
+      try:
+        data = request.get_json()
+
+        text = data.get('text')
+        created_at_str = data.get('created_at')
+        created_at = datetime.fromisoformat(created_at_str)
+        music_id = data.get('musicId')
+
+        if text:
+            # 查询数据库中的评论数量
+            comment_count = CommentModel.query.count()
+
+            # 生成新评论的 CommentID
+            new_comment_id = comment_count + 1
+
+            # 创建新评论
+            new_comment = CommentModel(CommentID=new_comment_id, Content=text, CommentTime=created_at, MusicID=music_id,
+                                       UserID=g.user.UserID)
+
+            # 添加到数据库并提交
+            db.session.add(new_comment)
+            db.session.commit()
+            return jsonify({'status': 'success'})
+        else:
+            return jsonify({'status': 'error', 'message': 'Comment text is empty'})
+
+      except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)})
+
+@app.route('/get_comments/<int:music_id>')
+def get_comments(music_id):
+    try:
+        # 查询特定歌曲的评论
+        comments = CommentModel.query.filter_by(MusicID=music_id).all()
+
+        # 将评论转换为字典列表，包含用户名
+        comments_dict_list = [
+            {
+                'id': comment.CommentID,
+                'content': comment.Content,
+                'time': comment.CommentTime.strftime('%Y-%m-%d %H:%M:%S'),
+                'user_id': comment.UserID,
+                'username': get_username_by_user_id(comment.UserID)
+            }
+            for comment in comments
+        ]
+
+        return jsonify({'status': 'success', 'comments': comments_dict_list})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)})
+
+def get_username_by_user_id(user_id):
+    try:
+        # 查询用户模型，获取用户名
+        user = UserModel.query.filter_by(UserID=user_id).first()
+        if user:
+            return user.UserName  # 使用正确的字段名
+        else:
+            return 'Unknown User'
+    except Exception as e:
+        return str(e)
+
 if __name__ == '__main__':
     app.run(debug=True)

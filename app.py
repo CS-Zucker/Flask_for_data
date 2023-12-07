@@ -10,7 +10,6 @@ from blueprints.operate import bp as operate_bp
 from blueprints.admin import bp as admin_bp
 from blueprints.view import bp as view_bp
 from models import CommentModel
-from decorators import login_required
 app = Flask(__name__)
 app.config.from_object(config)  # 绑定配置文件
 # 与db绑定
@@ -63,37 +62,7 @@ def handle_405_error(e):
 def handle_500_error(e):
     return render_template('error-500.html'), 500
 
-@app.route('/save_comment', methods=['POST'])
-@login_required
-def save_comment():
-      try:
-        data = request.get_json()
 
-        text = data.get('text')
-        created_at_str = data.get('created_at')
-        created_at = datetime.fromisoformat(created_at_str)
-        music_id = data.get('musicId')
-
-        if text:
-            # 查询数据库中的评论数量
-            comment_count = CommentModel.query.count()
-
-            # 生成新评论的 CommentID
-            new_comment_id = comment_count + 1
-
-            # 创建新评论
-            new_comment = CommentModel(CommentID=new_comment_id, Content=text, CommentTime=created_at, MusicID=music_id,
-                                       UserID=g.user.UserID)
-
-            # 添加到数据库并提交
-            db.session.add(new_comment)
-            db.session.commit()
-            return jsonify({'status': 'success'})
-        else:
-            return jsonify({'status': 'error', 'message': 'Comment text is empty'})
-
-      except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)})
 
 @app.route('/get_comments/<int:music_id>')
 def get_comments(music_id):

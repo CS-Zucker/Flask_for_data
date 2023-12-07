@@ -157,3 +157,8 @@ class EditMusicForm(wtforms.Form):  # 继承wtforms.Form
         add_class = ClassModel.query.filter_by(ClassID=ClassID).first()  # 返回第一个与邮箱一样
         if add_class is None:  # 为空
             raise wtforms.ValidationError(message="该类别ID不存在")  # 抛出异常
+
+
+#添加评论验证
+class AddCommentForm(wtforms.Form):  # 继承wtforms.Form
+    Content = wtforms.StringField(validators=[Length(min=1, max=200, message="评论内容过长，1~200")])

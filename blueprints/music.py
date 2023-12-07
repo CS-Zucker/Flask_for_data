@@ -38,5 +38,5 @@ def single(id):
     base_path = "../static/musics/"
     audio_url = base_path + song.StorageLocation
     #user = {'id': session.get('user_id'), 'username': session.get('username')}
-    return render_template('single.html', song=song, singer=singer,audio_url=audio_url)
+    return render_template('single.html', song=song, singer=singer,audio_url=audio_url,musicid=id)
 

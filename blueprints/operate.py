@@ -2,7 +2,7 @@ import os
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash, session
 from sqlalchemy import or_
 from exts import db
-from models import *
+from decorators import login_required
 from .forms import *
 from decorators import login_required
 from datetime import datetime
@@ -123,7 +123,7 @@ def user_edit(user_id):
             return redirect(url_for("operate.user_edit", user_id=user_id))
 
 
-# ===========================
+
 
 # 显示所有音乐的信息
 @bp.route('/music_list',methods=['GET','POST'])
@@ -504,3 +504,31 @@ def ad_delete(ad_id):
 
     flash('广告删除成功', 'success')
     return redirect(url_for('operate.ad_list'))
+
+@bp.route('/save_comment/<int:music_id>', methods=['POST'])
+@login_required
+def save_comment(music_id):
+    form = AddCommentForm(request.form)  # 获取前端用户提交的form数据扔给registerform进行验证
+    content = form.Content.data
+    print(content)
+    if form.validate():  # 调用验证器和验证函数
+        content = form.Content.data
+        print(content)
+        # 查询数据库中的评论数量
+        comment_count = CommentModel.query.count()
+        time = datetime.utcnow()
+        # 生成新评论的 CommentID
+        new_comment_id = comment_count + 1
+        # 创建新评论
+        new_comment = CommentModel(CommentID=new_comment_id, Content=content, CommentTime=time, MusicID=music_id,
+                                   UserID=g.user.UserID)
+        # 添加到数据库并提交
+        db.session.add(new_comment)
+        db.session.commit()
+        flash("评论添加成功！")  # 添加Flash消息
+        return redirect(url_for("music.single", id=music_id))  # 把视图函数转换成url 蓝图.视图函数
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'错误：{error} ')
+        return redirect(url_for("music.single",id=music_id))

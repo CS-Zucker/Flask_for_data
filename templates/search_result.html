@@ -58,10 +58,10 @@ document.getElementById('rTop').style.display="none"
   <div class="container">
     <hr><!--跳转链接还没写 -->
     <p>  {{song_singer.MusicModel.MusicName}}</p>
-    <p><a href="event.html"><img src="{{url_for}}" height=80 width=70 align=left border=0></a>  歌手：{{song_singer.SingerModel.Singer}}</p>
+    <p><a href="#"><img src="{{url_for}}" height=80 width=70 align=left border=0></a>  歌手：{{song_singer.SingerModel.Singer}}</p>
     <p>  发行时间：{{song_singer.MusicModel.IssueTime}}</p>
     <p>  简介：{{song_singer.MusicModel.Intro}}</p>
-    <p>  售价：{{song_singer.MusicModel.price}}<a href="event.html" style="color: gray;">......音乐试听</a></p>
+    <p>  售价：{{song_singer.MusicModel.price}}<a href={{url_for('music.single',id=song_singer.MusicModel.MusicID)}} style="color: gray;">......音乐试听</a></p>
   </div>
 <br/>
 {% endfor %}
@@ -71,10 +71,10 @@ document.getElementById('rTop').style.display="none"
   <div class="container">
     <hr><!--跳转链接还没写 -->
     <p>  {{song_singer.MusicModel.MusicName}}</p>
-    <p><a href="event.html"><img src="{{url_for}}" height=80 width=70 align=left border=0></a>  歌手：{{song_singer.SingerModel.Singer}}</p>
+    <p><a href="#"><img src="{{url_for}}" height=80 width=70 align=left border=0></a>  歌手：{{song_singer.SingerModel.Singer}}</p>
     <p>  发行时间：{{song_singer.MusicModel.IssueTime}}</p>
     <p>  简介：{{song_singer.MusicModel.Intro}}</p>
-    <p>  售价：{{song_singer.MusicModel.price}}<a href="event.html" style="color: gray;">......音乐试听</a></p>
+    <p>  售价：{{song_singer.MusicModel.price}}<a href={{url_for('music.single',id=song_singer.MusicModel.MusicID)}} style="color: gray;">......音乐试听</a></p>
   </div>
 <br/>
 {% endfor %}

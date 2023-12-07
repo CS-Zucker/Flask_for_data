@@ -113,7 +113,7 @@ def get_songs_(singername):
         join(SingingModel, MusicModel.MusicID == SingingModel.MusicID).\
         join(SingerModel, SingerModel.SingerID == SingingModel.SingerID).\
         filter(SingerModel.Singer.contains(singername)).all()
-    # 使用 join 连接这三个表，连接条件是 MusicModel 的 MusicID 等于 SingingModel 的 MusicID
+    # 使用 join 连接表，连接条件是 MusicModel 的 MusicID 等于 SingingModel 的 MusicID
     #               以及 SingerModel 的 SingerID 等于 SingingModel 的 SingerID
     # filter 条件是 SingerModel.Singer 等于 '给定歌首'
     # all() 方法返回所有符合条件的记录
@@ -125,7 +125,7 @@ def get_songs_for_chart():
     # 执行查询
     chart_music_info = db.session.query(
         ChartModel.ChartType,
-        CRankModel.SongRank,
+        CRankModel.SongRanking,
         MusicModel.MusicID,
         MusicModel.MusicName,
         SingerModel.SingerID,
@@ -144,14 +144,14 @@ def get_songs_for_chart():
         SingingModel.SingerID == SingerModel.SingerID
     ).order_by(
         ChartModel.ChartID,
-        CRankModel.SongRank
+        CRankModel.SongRanking
     ).all()
     chart_music_dict = {}
     for result in chart_music_info:
         chart_type = result.ChartType
         # 创建音乐信息字典
         music_info = {
-            'MusicRank': result.SongRank,
+            'MusicRank': result.SongRanking,
             'MusicID': result.MusicID,
             'MusicName': result.MusicName,
             'SingerID': result.SingerID,

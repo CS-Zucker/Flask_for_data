@@ -22,11 +22,8 @@ a:active {color:orange;text-decoration:blink;}
 <table width="100%" border="0"  cellpadding="0">
 <tr>
 <td align="left" width="300"><h1 align="center"><a href="index.html"><font color="#FF0000" face="华文彩云" size="20">X Music</font></a></h1></td>
-<td align="right"><a href="account.html"><font color="#FFFFFF" face="黑体" size="4">我的</font></a></td>
-<td align="right"><a href="discovery.html"><font color="#FFFFFF" face="黑体" size="4">推荐</font></a></td>
-<td align="right"><a href="library.html"><font color="#FFFFFF" face="黑体" size="4">乐库</font></a></td>
-<td align="right"><a href="news.html"><font color="#FFFFFF" face="黑体" size="4">看点</font></a></td>
-<td align="right"><a href="chart.html"><font color="#FFFFFF" face="黑体" size="4">排行</font></a></td>
+<td align="right"><a href={{url_for('music.index')}}><font color="#FFFFFF" face="黑体" size="4">乐库</font></a></td>
+<td align="right"><a href={{url_for('music.chart')}}><font color="#FFFFFF" face="黑体" size="4">榜单</font></a></td>
 <td align="right"><a href={{url_for('operate.search')}}><font color="#FFFFFF" face="黑体" size="4">搜索</font></a></td>
   {% if user %}<!-- 有用户显示下面 ,个人中心要给视图函数传参-->
     <td align="right" ><a href={{url_for('auth.personal',user_id=user.UserID)}}><font color="#FFFFFF" face="黑体" size="4">{{user.UserName}}个人中心</font></a></td><!-- 无连接用span标签 -->
@@ -53,7 +50,7 @@ a:active {color:orange;text-decoration:blink;}
 <td><a href="support.html"><font color="#FFFFFF" face="微软雅黑" size="1">| 问题中心 |</font></a></td>
 <td><a href="law.html"><font color="#FFFFFF" face="微软雅黑" size="1">| 法律支持 |</font></a></td>
 </table>
-<h1 align="center"><a href="index.html"><font color="#FF0000" face="华文彩云" size="20">X Music</font></a></h1>
+<h1 align="center"><a href="#"><font color="#FF0000" face="华文彩云" size="20">X Music</font></a></h1>
 </div>
 </div>
 

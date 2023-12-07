@@ -171,7 +171,8 @@ def music_search(music_id):
             return redirect(url_for("operate.music_list"))  # 当没有
         else:
             return redirect(url_for("operate.music_search", music_id=music_id))
-# 添加音乐
+        
+# 添加音乐 TODO: 歌手信息
 @bp.route('/music_add',methods=['GET','POST'])
 def music_add():
     if request.method == 'GET':
@@ -190,8 +191,8 @@ def music_add():
             classid = form.ClassID.data
             price = form.price.data
             issuetime = form.IssueTime.data
-            storagelocation = os.path.join("../static/musics/", musicf.filename)
-            coverlocation = os.path.join("../static/covers/", coverf.filename)
+            storagelocation = os.path.join(musicf.filename)
+            coverlocation = os.path.join(coverf.filename)[:4]
             music = MusicModel(MusicID=musicid, MusicName=musicname, ClassID=classid, Intro=intro, price=price, IssueTime=issuetime, StorageLocation=storagelocation, Cover=coverlocation)
             db.session.add(music)
             db.session.commit()
@@ -221,8 +222,8 @@ def music_edit(music_id):
             music.ClassID = form.ClassID.data
             music.price = form.price.data
             music.IssueTime = form.IssueTime.data
-            music.StorageLocation = os.path.join("../static/musics/", musicf.filename)
-            music.Cover = os.path.join("../static/covers/", coverf.filename)
+            music.StorageLocation = os.path.join(musicf.filename)
+            music.Cover = os.path.join(coverf.filename)
             db.session.commit()
             flash("音乐修改成功！")  # 添加Flash消息
             return redirect(url_for("operate.music_list"))  # 把视图函数转换成url 蓝图.视图函数
@@ -532,3 +533,21 @@ def save_comment(music_id):
             for error in errors:
                 flash(f'错误：{error} ')
         return redirect(url_for("music.single",id=music_id))
+    
+@bp.route('/create_order/<int:music_id>', methods=['POST'])
+@login_required
+def create_order(music_id):
+    # 查询数据库中的订单数量
+    order_count = OrderModel.query.count()
+    time = datetime.utcnow()
+    # 生成新订单的 OrderID
+    new_order_id = order_count + 1
+    # 创建新订单
+    new_order = OrderModel(OrderID=new_order_id, UserID=g.user.UserID, OrderTime=time, DownloadStatus='1')
+    new_ordering = OrderingModel(OrderID=new_order_id, MusicID=music_id)
+    # 添加到数据库并提交
+    db.session.add(new_order)
+    db.session.add(new_ordering)
+    db.session.commit()
+    flash("订单添加成功！")  # 添加Flash消息
+    return redirect(url_for("music.single", id=music_id))  # 把视图函数转换成url 蓝图.视图函数

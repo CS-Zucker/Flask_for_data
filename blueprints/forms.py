@@ -121,7 +121,7 @@ class RepasswordForm(wtforms.Form):  # 继承wtforms.Form
             db.session.commit()
 
 
-# 添加音乐验证
+# 添加音乐验证 TODO:歌手
 class AddMusicForm(wtforms.Form):  # 继承wtforms.Form
     MusicID = wtforms.StringField(validators=[Length(min=5, max=5, message="音乐ID格式错误")])
     MusicName = wtforms.StringField(validators=[Length(min=1, max=30, message="音乐名格式错误")])
@@ -140,7 +140,7 @@ class AddMusicForm(wtforms.Form):  # 继承wtforms.Form
         if add_class is None:  # 为空
             raise wtforms.ValidationError(message="该类别ID不存在")  # 抛出异常
 
-# 修改音乐验证
+# 修改音乐验证 TODO:歌手
 class EditMusicForm(wtforms.Form):  # 继承wtforms.Form
     MusicName = wtforms.StringField(validators=[Length(min=1, max=30, message="音乐名格式错误")])
     Intro = wtforms.StringField(validators=[Length(min=0, max=200,  message="简介格式错误")])
@@ -159,6 +159,6 @@ class EditMusicForm(wtforms.Form):  # 继承wtforms.Form
             raise wtforms.ValidationError(message="该类别ID不存在")  # 抛出异常
 
 
-#添加评论验证
+# 添加评论验证
 class AddCommentForm(wtforms.Form):  # 继承wtforms.Form
     Content = wtforms.StringField(validators=[Length(min=1, max=200, message="评论内容过长，1~200")])

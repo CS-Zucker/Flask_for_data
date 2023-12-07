@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, g, render_template, request
 from models import *
 import random
 
@@ -24,19 +24,19 @@ def chart():
     chart_music_dict = get_songs_for_chart()
     return render_template('chart.html', chart_music_dict=chart_music_dict)
 
-@bp.route('/single/<int:id>')
+@bp.route('/single/<int:id>', methods=['GET', 'POST'])
 def single(id):
-    song = MusicModel.query.get(id)
-    singing_entry = SingingModel.query.filter_by(MusicID=id).first()
-    if singing_entry:
-        singer_id = singing_entry.SingerID
-        # 根据歌手ID查询歌手信息
-        singer = SingerModel.query.get(singer_id)
-    else:
+    if request.method == 'GET':
+        song = MusicModel.query.get(id)
+        singing_entry = SingingModel.query.filter_by(MusicID=id).first()
         singer = None
-
-    base_path = "../static/musics/"
-    audio_url = base_path + song.StorageLocation
-    #user = {'id': session.get('user_id'), 'username': session.get('username')}
-    return render_template('single.html', song=song, singer=singer,audio_url=audio_url,musicid=id)
-
+        if singing_entry:
+            singer_id = singing_entry.SingerID
+            # 根据歌手ID查询歌手信息
+            singer = SingerModel.query.get(singer_id)
+        
+        base_path = "../static/musics/"
+        audio_url = base_path + song.StorageLocation
+        user_permissions = check_permissions_for_user(id, g.user.UserID) # 查询用户权限->下载、评论
+        
+        return render_template('single.html', song=song, singer=singer,audio_url=audio_url,musicid=id,permissions=user_permissions)

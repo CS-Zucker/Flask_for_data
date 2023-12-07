@@ -65,7 +65,7 @@ width:1000px;
 </style>
 
 <script>
-<!--拖动滚动条或滚动鼠标轮-->
+// <!--拖动滚动条或滚动鼠标轮-->
 window.onscroll=function(){
 if(document.body.scrollTop||document.documentElement.scrollTop>0){
 document.getElementById('rTop').style.display="block"
@@ -73,7 +73,7 @@ document.getElementById('rTop').style.display="block"
 document.getElementById('rTop').style.display="none"
 }
 }
-<!--点击“回到顶部”按钮-->
+// <!--点击“回到顶部”按钮-->
 function toTop(){
 window.scrollTo('0','0');
 document.getElementById('rTop').style.display="none"
@@ -84,7 +84,7 @@ document.getElementById('rTop').style.display="none"
 
 <body style=" background-repeat:repeat ;
 background-size:contain;
-background-attachment: fixed;" background="../static/images/{{song.Cover}}.jpg"  bgcolor="#000000" text="#FFFFFF" >
+background-attachment: fixed;" background="../static/covers/{{song.Cover}}.jpg"  bgcolor="#000000" text="#FFFFFF" >
 <div class="rTop" id="rTop" onClick="toTop()"><font color="#FFFFFF"><b>↑↑↑返回顶部</b></font></div>
 {% endblock %}
 
@@ -99,10 +99,12 @@ background-attachment: fixed;" background="../static/images/{{song.Cover}}.jpg" 
 <h1 align="left"><font color="#FFFFFF" face="微软雅黑" size="3">&nbsp;&nbsp;&nbsp;&nbsp;歌手：</font><a href="#"><font color="#FFFFFF" face="微软雅黑" size="3">{{singer.Singer}}</font></a></h1>
 <h1 align="left"><font color="#FFFFFF" face="微软雅黑" size="3">&nbsp;&nbsp;&nbsp;&nbsp;所属专辑：</font><a href="#"><font color="#FFFFFF" face="微软雅黑" size="3">{{song.Cover}}</font></a></h1>
 <div>
+{% if permissions %}
 <audio controls>
   <source src="{{ audio_url }}" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
+{% endif %}
 </div>
 <br />
 
@@ -111,13 +113,21 @@ background-attachment: fixed;" background="../static/images/{{song.Cover}}.jpg" 
 <tr>
 
 	<td><a href="#" id="musicButton"><font color="#FFFFFF">音乐试听</font></a></td>
-	<td><button type="button" id="btn2"><font color="#FFFFFF" face="微软雅黑" size="3">下载歌曲</font></button></td>
-	<td><a href=""><font color="#FFFFFF">购买歌曲</font></a></td>
-	<td><a href=" "><font color="#FFFFFF">分享歌曲</font></a></td>
+	<td><a href="#" id="orderButton" onclick=""><font color="#FFFFFF">购买歌曲</font></a></td>
 	<td><a href="#评论"><font color="#FFFFFF">查看评论</font></a></td>
 
-
 </table>
+
+<script>
+var orderButton = document.getElementById('orderButton').onclick = function() {
+    var form = document.createElement('form');
+    form.action = "{{url_for('operate.create_order',music_id=musicid)}}";
+    form.method = 'post';
+    document.body.appendChild(form);
+    form.submit();
+};
+</script>
+
 <script>
 var musicButton = document.getElementById('musicButton');
 
@@ -138,7 +148,7 @@ function playMusic() {
 
   // 监听 timeupdate 事件，当音频播放时间超过 20 秒时停止播放
   audio.addEventListener('timeupdate', function () {
-    if (audio.currentTime >= 5) {
+    if (audio.currentTime >= 20) {
       audio.pause();
     }
   });
@@ -190,7 +200,7 @@ function playMusic() {
   </div>
 
 <div class="right">
-    <img src="../static/images/{{song.Cover}}.jpg" width="300px" height="300">
+    <img src="../static/covers/{{song.Cover}}.jpg" width="300px" height="300">
 </div>
 
 <script>
@@ -313,9 +323,9 @@ function playMusic() {
   }
 </style>
 
+{% if permissions %}
 <!-- 使用样式 -->
 <h1 class="comment-heading"><a name="评论">评论▦</a></h1>
-
 
 <form action="{{url_for('operate.save_comment',music_id=musicid)}}"  id="clearFrom"  method="POST">
 <div align="center">
@@ -325,7 +335,7 @@ function playMusic() {
     cols="93"
     rows="3"
     style="background: transparent; border: 4px solid; color: #FFFFFF; font-size: 20px; font-family: 微软雅黑;">
-  </textarea><br />
+  </textarea><br/>
   <style>#memo { font-size: 36px; color: #FFFFFF; }</style>
     <div class="col-md-5 col-sm-5 col-xs-5">
         {% with messages = get_flashed_messages() %}
@@ -340,19 +350,15 @@ function playMusic() {
     </div>
 </div>
 
-
-
 <div align="right">
-
-<input type="submit" value="发布评论">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type="button" value="重置内容" id="clearText"/>
-<p id="msg"></p>
+    <input type="submit" value="发布评论">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="button" value="重置内容" id="clearText"/>
+    <p id="msg"></p>
 </div>
-
 </form>
+{% endif %}
 
 <script>
     var _clearText=document.getElementById("clearText");
@@ -371,13 +377,16 @@ function playMusic() {
 
 <br />
 <br />
+{% if permissions %}
 <h1 align="left"><font color="#FFFFFF" face="微软雅黑" size="4"><b>精彩评论▦</b></font></h1>
 <hr align= "left" width="100%" color="#FF0000" noshade="noshade" size="1">
     <div id="comments-container">
         <!-- 评论将在此动态显示 -->
     </div>
-    <script>
-      function getRandomColor() {
+{% endif %}
+
+<script>
+function getRandomColor() {
     // 生成随机颜色
     var letters = '0123456789ABCDEF';
     var color = '#';
@@ -386,7 +395,7 @@ function playMusic() {
     }
     return color;
 }
-       function appendCommentToContainer(container, comment) {
+function appendCommentToContainer(container, comment) {
     var commentElement = document.createElement('div');
     commentElement.classList.add('comment');
 
@@ -415,9 +424,10 @@ function playMusic() {
         window.onload = function() {
             loadComments();
         };
-    </script>
-    <style>
-  .comment {
+</script>
+
+<style>
+.comment {
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -448,53 +458,16 @@ function playMusic() {
     right: 5px;
 }
 
+</style>
 
-    </style>
-<div style="margin: 0 auto;font-size:18px;font-color:微软雅黑;">
+<div style="margin: 0 auto;font-size:18px;font:微软雅黑;">
 <br />
-
 <hr size="1">
 <br />
 <br />
-
-
-
-
-
 <br />
-
 </div>
-
-
-
-
-
-
-
-
-
 </div>
 {% endblock %}
 
-{% block link %}
-<script src="../static/js/down.js"></script>
-<script>
-	$(function(){
-
-		var $eleBtn2 = $("#btn2");
-
-		//方法二：通过form
-		$eleBtn2.click(function(){
-			var $eleForm = $("<form method='get'></form>");
-
-			$eleForm.attr("action","musics/06：41 A.M. - 林峯.mp3");
-
-			$(document.body).append($eleForm);
-
-			//提交表单，实现下载
-			$eleForm.submit();
-		});
-	})
-</script>
-{% endblock %}
 

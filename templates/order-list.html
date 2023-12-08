@@ -28,13 +28,12 @@
     <div class="x-body">
       <div class="layui-row">
         <form class="layui-form layui-col-md12 x-so" method="Post">
-          <input type="text" name="musicid"  placeholder="请输入音乐名或id" autocomplete="off" class="layui-input">
+          <input type="text" name="orderid"  placeholder="请输入订单ID或用户ID" autocomplete="off" class="layui-input">
           <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
         </form>
       </div>
       <xblock>
-        <a class="layui-btn" href="{{url_for('operate.music_list')}}">返回音乐列表</a>
-          <a class="layui-btn" href="{{url_for('operate.music_add')}}">添加</a>
+        <a class="layui-btn" href="{{url_for('operate.order_list')}}">返回订单列表</a>
       </xblock>
         {% with messages = get_flashed_messages() %}
           {% if messages %}
@@ -50,41 +49,31 @@
           <tr>
             <th>序号
             </th>
-            <th>音乐ID</th>
-            <th>音乐名</th>
-            <th>类别ID</th>
-            <th>价格</th>
-            <th>发布时间</th>
-            <th>歌手ID</th>
-            <th>歌手</th>
-            <th>歌手性别</th>
+            <th>订单ID</th>
+            <th>用户ID</th>
+            <th>下单时间</th>
+            <th>可下载状态</th>
             <th>操作</th></tr>
         </thead>
         <tbody>
         {% if paginate %}
-			 {% for music in paginate.items %}<!-- musics.items返回的是music对象 -->
+			 {% for order in paginate.items %}<!-- orders.items返回的是order对象 -->
              <tr>
                  {% set i=loop.index+12*(paginate.page-1) %}
                 <td>{{ i }}</td>
-                <td>{{music[0].MusicID}}</td>
-                <td>{{music[0].MusicName}}</td>
-                <td>{{music[0].ClassID}}</td>
-                <td>{{music[0].price}}</td>
-                <td>{{music[0].IssueTime}}</td>
-                <td>{{music[1].SingerID}}</td>
-                <td>{{music[1].Singer}}</td>
-                <td>{{music[1].SingerSex}}</td>
+                <td>{{order.OrderID}}</td>
+                <td>{{order.UserID}}</td>
+                <td>{{order.OrderTime}}</td>
+                <td>{{order.DownloadStatus}}</td>
                 <td class="td-manage">
-                    <a title="编辑"   href="{{url_for('operate.music_edit',music_id=music[0].MusicID, singer_id=music[1].SingerID)}}">编辑</a>
-                <i class="layui-icon">&#xe642;</i>
-                  <button title="删除" onclick="member_del(this,'{{music[0].MusicID}}')" >删除</button>
+                  <button title="删除" onclick="member_del(this,'{{order.OrderID}}')" >删除</button>
                     <i class="layui-icon">&#xe640;</i>
 
                 </td>
               </tr>
 			{% endfor %}
         {% else %}
-             {% for music in musics %}
+             {% for order in orders %}
                 <tr>
                     {% if paginate is not none %}
                     {% set i=loop.index+paginate.per_page*(paginate.page-1) %}
@@ -92,18 +81,12 @@
                     {% else %}
                     <td>{{ loop.index }}</td>
                     {%endif%}
-                    <td>{{music[0].MusicID}}</td>
-                    <td>{{music[0].MusicName}}</td>
-                    <td>{{music[0].ClassID}}</td>
-                    <td>{{music[0].price}}</td>
-                    <td>{{music[0].IssueTime}}</td>
-                    <td>{{music[1].SingerID}}</td>
-                    <td>{{music[1].Singer}}</td>
-                    <td>{{music[1].SingerSex}}</td>
+                    <td>{{order.OrderID}}</td>
+                    <td>{{order.UserID}}</td>
+                    <td>{{order.OrderTime}}</td>
+                    <td>{{order.DownloadStatus}}</td>
                     <td class="td-manage">
-                        <a title="编辑"   href="{{url_for('operate.music_edit',music_id=music[0].MusicID, singer_id=music[1].SingerID)}}">编辑</a>
-                <i class="layui-icon">&#xe642;</i>
-                      <button title="删除" onclick="member_del(this,'{{music[0].MusicID}}')">删除</button>
+                      <button title="删除" onclick="member_del(this,'{{order.OrderID}}')">删除</button>
                         <i class="layui-icon">&#xe640;</i>
                       </a>
                     </td>
@@ -117,22 +100,22 @@
           {% if paginate%}
           <!-- 左一页 -->
           {% if paginate.has_prev %} <!-- 没有左页就不显示左标签-->
-          <a class="prev" href="{{url_for('operate.music_list')}}?page={{paginate.prev_num}}">&lt;&lt;</a>
+          <a class="prev" href="{{url_for('operate.order_list')}}?page={{paginate.prev_num}}">&lt;&lt;</a>
           {% endif %}
 
           {% for num in range(paginate.page-3,paginate.page+4) %}
             {%if num >=1%}
           {% if num == paginate.page  %}
-          <span class="current" href="{{url_for('operate.music_list')}}?page={{num}}">{{num}}</span>
+          <span class="current" href="{{url_for('operate.order_list')}}?page={{num}}">{{num}}</span>
           {% else %}
-            <span class="" href="{{url_for('operate.music_list')}}?page={{num}}">{{num}}</span>
+            <span class="" href="{{url_for('operate.order_list')}}?page={{num}}">{{num}}</span>
             {% endif %}
             {%endif%}
           {% endfor %}
 
           <!-- 右一页 -->
           {% if paginate.has_next %} <!-- 没有右页就不显示左标签-->
-          <a class="next" href="{{url_for('operate.music_list')}}?page={{paginate.next_num}}">&gt;&gt;</a>
+          <a class="next" href="{{url_for('operate.order_list')}}?page={{paginate.next_num}}">&gt;&gt;</a>
           {% endif %}
           {% endif %}
         </div>
@@ -157,13 +140,13 @@
 
 
 
-      /*音乐-删除*/
+      /*订单-删除*/
         function member_del(obj,id, callback){
             layer.confirm('确认要删除吗？',function(index){
                 //发异步删除数据
                 $(obj).parents("tr").remove();
                 layer.msg('已删除!',{icon:1,time:1000});
-                window.location.href="/operate/music_delete/" + id;
+                window.location.href="/operate/order_delete/" + id;
             });
         }
 

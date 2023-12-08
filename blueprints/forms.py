@@ -121,7 +121,7 @@ class RepasswordForm(wtforms.Form):  # 继承wtforms.Form
             db.session.commit()
 
 
-# 添加音乐验证 TODO:歌手
+# 添加音乐验证 
 class AddMusicForm(wtforms.Form):  # 继承wtforms.Form
     MusicID = wtforms.StringField(validators=[Length(min=5, max=5, message="音乐ID格式错误")])
     MusicName = wtforms.StringField(validators=[Length(min=1, max=30, message="音乐名格式错误")])
@@ -129,9 +129,13 @@ class AddMusicForm(wtforms.Form):  # 继承wtforms.Form
     ClassID = wtforms.StringField(validators=[Length(min=3, max=3,  message="类型ID格式错误")])
     price = wtforms.DecimalField(validators=[NumberRange(min=0.00, max=999.99, message="价格格式错误")])  # 两位小数验证
     IssueTime = wtforms.DateTimeField(format="%Y-%m-%dT%H:%M")  # YYYY-MM-DD HH:MM:SS
+    SingerID = wtforms.StringField(validators=[Length(min=1, max=5, message="歌手ID格式错误")])
+    Singer = wtforms.StringField(validators=[Length(min=1, max=30, message="歌手名格式错误")])
+    SingerSex = wtforms.StringField(validators=[AnyOf(['男', '女'], message="歌手性别格式错误")])
+
     def validate_MusicID(self, filed):
         MusicID = filed.data
-        music = MusicModel.query.filter_by(MusicID=MusicID).first()  # 返回第一个与邮箱一样
+        music = MusicModel.query.filter_by(MusicID=MusicID).first()  # 返回第一个音乐
         if music:  # 不为空
             raise wtforms.ValidationError(message="该音乐ID已存在")  # 抛出异常
     def validate_ClassID(self, filed):
@@ -139,14 +143,22 @@ class AddMusicForm(wtforms.Form):  # 继承wtforms.Form
         add_class = ClassModel.query.filter_by(ClassID=ClassID).first()  # 返回第一个与邮箱一样
         if add_class is None:  # 为空
             raise wtforms.ValidationError(message="该类别ID不存在")  # 抛出异常
+    def validate_SingerID(self, filed):
+        SingerID = filed.data
+        add_class = SingerModel.query.filter_by(SingerID=SingerID).first()  # 返回第一个歌手
+        if add_class:  # 不为空
+            raise wtforms.ValidationError(message="该歌手ID已存在")  # 抛出异常
 
-# 修改音乐验证 TODO:歌手
+# 修改音乐验证 
 class EditMusicForm(wtforms.Form):  # 继承wtforms.Form
     MusicName = wtforms.StringField(validators=[Length(min=1, max=30, message="音乐名格式错误")])
     Intro = wtforms.StringField(validators=[Length(min=0, max=200,  message="简介格式错误")])
     ClassID = wtforms.StringField(validators=[Length(min=3, max=3,  message="类型ID格式错误")])
     price = wtforms.DecimalField(validators=[NumberRange(min=0.00, max=999.99, message="价格格式错误")])  # 两位小数验证
     IssueTime = wtforms.DateTimeField(format="%Y-%m-%dT%H:%M")  # YYYY-MM-DD HH:MM:SS
+    Singer = wtforms.StringField(validators=[Length(min=1, max=30, message="歌手名格式错误")])
+    SingerSex = wtforms.StringField(validators=[AnyOf(['男', '女'], message="歌手性别格式错误")])
+
     def validate_MusicID(self, filed):
         MusicID = filed.data
         music = MusicModel.query.filter_by(MusicID=MusicID).first()  # 返回第一个与邮箱一样

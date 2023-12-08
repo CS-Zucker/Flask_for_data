@@ -130,10 +130,12 @@ def user_edit(user_id):
 def music_list():
     if request.method == 'GET':
         page = request.args.get("page", type=int, default=1)   # 当没有参数时默认为一,转成整形很重要，默认为string
-        # 分页器对象
-        paginate = MusicModel.query.paginate(page=page, per_page=12)  # 当前页和每页展示多少数据
-
-        return render_template("music-list.html", paginate=paginate,)  # 把paginate对象传到前端
+        # 分页器对象 
+        paginate = db.session.query(MusicModel, SingerModel).\
+            join(SingingModel, MusicModel.MusicID == SingingModel.MusicID).\
+            join(SingerModel, SingerModel.SingerID == SingingModel.SingerID).paginate(page=page, per_page=12)
+        
+        return render_template("music-list.html", paginate=paginate)  # 把paginate对象传到前端
     else:
         music_id = request.form.get("musicid")  # 要搜索音乐id
         if music_id == '':
@@ -172,7 +174,7 @@ def music_search(music_id):
         else:
             return redirect(url_for("operate.music_search", music_id=music_id))
         
-# 添加音乐 TODO: 歌手信息
+# 添加音乐 
 @bp.route('/music_add',methods=['GET','POST'])
 def music_add():
     if request.method == 'GET':
@@ -193,8 +195,17 @@ def music_add():
             issuetime = form.IssueTime.data
             storagelocation = os.path.join(musicf.filename)
             coverlocation = os.path.join(coverf.filename)[:4]
+            
+            singerid = form.SingerID.data
+            singername = form.Singer.data
+            singersex = form.SingerSex.data
+            
             music = MusicModel(MusicID=musicid, MusicName=musicname, ClassID=classid, Intro=intro, price=price, IssueTime=issuetime, StorageLocation=storagelocation, Cover=coverlocation)
+            singer = SingerModel(SingerID=singerid, Singer=singername, SingerSex=singersex)
+            singing = SingingModel(SingerID=singerid, MusicID=musicid)
             db.session.add(music)
+            db.session.add(singer)
+            db.session.add(singing)
             db.session.commit()
             flash("音乐添加成功！")  # 添加Flash消息
             return redirect(url_for("operate.music_list"))  # 把视图函数转换成url 蓝图.视图函数
@@ -204,8 +215,9 @@ def music_add():
                     flash(f'错误：{error} ')
             return redirect(url_for("operate.music_add"))
 
-@bp.route('/music_edit/<string:music_id>',methods=['GET','POST'])
-def music_edit(music_id):
+# 修改音乐信息 
+@bp.route('/music_edit/<string:music_id>?<string:singer_id>',methods=['GET','POST'])
+def music_edit(music_id, singer_id):
     if request.method == 'GET':
         return render_template('music-edit.html')
     else:
@@ -222,8 +234,13 @@ def music_edit(music_id):
             music.ClassID = form.ClassID.data
             music.price = form.price.data
             music.IssueTime = form.IssueTime.data
+            
+            singer = SingerModel.query.get(singer_id)
+            singer.Singer = form.Singer.data
+            singer.SingerSex = form.SingerSex.data
+            
             music.StorageLocation = os.path.join(musicf.filename)
-            music.Cover = os.path.join(coverf.filename)
+            music.Cover = os.path.join(coverf.filename)[:4]
             db.session.commit()
             flash("音乐修改成功！")  # 添加Flash消息
             return redirect(url_for("operate.music_list"))  # 把视图函数转换成url 蓝图.视图函数
@@ -233,6 +250,9 @@ def music_edit(music_id):
                     flash(f'错误：{error} ')
             print(form.errors)
             return redirect(url_for("operate.music_edit", music_id=music_id))
+
+
+
 
 @bp.route('/comment_list',methods=['GET','POST'])
 def comment_list():
@@ -274,12 +294,9 @@ def comment_list():
         if user_id:
             return redirect(url_for("operate.comment_user_search", username=user_id))
         elif music_name:
-
-
-                return redirect(url_for("operate.comment_music_search", musicname=music_name))
+            return redirect(url_for("operate.comment_music_search", musicname=music_name))
 
         elif comment_content:
-
             return redirect(url_for("operate.comment_comment_search", comment=comment_content))
         else:
             return redirect(url_for("operate.comment_list"))
@@ -311,9 +328,6 @@ def comment_user_search(username):
 
         if user:
          paginate = CommentModel.query.filter(CommentModel.UserID == user.UserID).paginate(page=page, per_page=10)
-
-
-
          user_ids = [comment.UserID for comment in paginate.items]
          music_ids = [comment.MusicID for comment in paginate.items]
          contents = [comment.Content for comment in paginate.items]
@@ -368,9 +382,6 @@ def comment_music_search(musicname):
 
         if music:
          paginate = CommentModel.query.filter(CommentModel.MusicID == music.MusicID).paginate(page=page, per_page=10)
-
-
-
          user_ids = [comment.UserID for comment in paginate.items]
          music_ids = [comment.MusicID for comment in paginate.items]
          contents = [comment.Content for comment in paginate.items]
@@ -408,11 +419,9 @@ def comment_music_search(musicname):
         if user_id:
             return redirect(url_for("operate.comment_user_search", username=user_id))
         elif music_name:
-
             return redirect(url_for("operate.comment_music_search", musicname=music_name))
 
         elif comment_content:
-
             return redirect(url_for("operate.comment_comment_search", comment=comment_content))
         else:
             return redirect(url_for("operate.comment_list"))
@@ -426,8 +435,6 @@ def comment_comment_search(comment):
 
         if com:
          paginate = CommentModel.query.filter(func.trim(CommentModel.Content) == com.Content).paginate(page=page, per_page=10)
-
-
          user_ids = [comment.UserID for comment in paginate.items]
          music_ids = [comment.MusicID for comment in paginate.items]
          contents = [comment.Content for comment in paginate.items]
@@ -551,3 +558,51 @@ def create_order(music_id):
     db.session.commit()
     flash("订单添加成功！")  # 添加Flash消息
     return redirect(url_for("music.single", id=music_id))  # 把视图函数转换成url 蓝图.视图函数
+
+
+# 显示所有订单的信息
+@bp.route('/order_list',methods=['GET','POST'])
+def order_list():
+    if request.method == 'GET':
+        page = request.args.get("page", type=int, default=1)   # 当没有参数时默认为一,转成整形很重要，默认为string
+        # 分页器对象
+        paginate = OrderModel.query.paginate(page=page, per_page=12)  # 当前页和每页展示多少数据
+
+        return render_template("order-list.html", paginate=paginate,)  # 把paginate对象传到前端
+    else:
+        order_id = request.form.get("orderid")  # 要搜索订单id
+        if order_id == '':
+            flash("请输入数据")
+            return redirect(url_for("operate.order_list"))  # 当没有
+        else:
+            orders = OrderModel.query.filter(or_(OrderModel.OrderID == order_id, OrderModel.UserID == order_id))
+            if not orders:
+                flash("不存在此订单")
+                redirect(url_for("operate.order_list"))
+            else:
+                return redirect(url_for("operate.order_search", order_id=order_id))
+
+
+# 搜索订单信息
+@bp.route('/order_search/<string:order_id>',methods=['GET','POST'])
+def order_search(order_id):
+    if request.method == 'GET':
+        orderid = order_id
+        userid = order_id
+        orders = OrderModel.query.filter(or_(OrderModel.OrderID.contains(orderid), OrderModel.UserID.contains(userid)))
+        return render_template("order-list.html", orders=orders, paginate=None)
+    else:
+        order_id = request.form.get("orderid")  # 要搜索订单id
+        if order_id == '':
+            flash("请输入数据")
+            return redirect(url_for("operate.order_list"))  # 当没有
+        else:
+            return redirect(url_for("operate.order_search", order_id=order_id))
+
+# 删除指定订单的信息
+@bp.route('/order_delete/<string:order_id>')
+def order_delete(order_id):
+    drop_order = OrderModel.query.get(order_id)  # 删除订单的id
+    db.session.delete(drop_order)
+    db.session.commit()
+    return redirect(url_for("operate.order_list"))

@@ -1,5 +1,6 @@
 from sqlalchemy import func, desc
 from exts import db
+from sqlalchemy import and_
 class UserModel(db.Model):
     __tablename__ = "用户"
     UserID = db.Column(db.String(11), primary_key=True)
@@ -177,4 +178,15 @@ def get_songs_for_chart():
     #         print()
     return chart_music_dict
 
-
+def check_permissions_for_user(music_id, user_id):
+    # 执行查询
+    check_order_nums = db.session.query(OrderModel).\
+    join(UserModel, UserModel.UserID == OrderModel.UserID).\
+    join(OrderingModel, OrderingModel.OrderID == OrderModel.OrderID).\
+    join(MusicModel, MusicModel.MusicID == OrderingModel.MusicID).\
+    filter(and_(UserModel.UserID.contains(user_id), MusicModel.MusicID.contains(music_id))).count()
+    # print(check_order_nums)
+    if check_order_nums > 0:
+        return True
+    else:
+        return False

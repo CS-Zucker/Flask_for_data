@@ -183,7 +183,7 @@ def music_add():
             musicf = request.files['musicfile']
             coverf = request.files['coverfile']
             musicf.save(os.path.join("static/musics/", musicf.filename))
-            coverf.save(os.path.join("static/covers/", coverf.filename))
+            coverf.save(os.path.join("static/images/", coverf.filename))
 
             musicid = form.MusicID.data
             musicname = form.MusicName.data
@@ -214,7 +214,7 @@ def music_edit(music_id):
             musicf = request.files['musicfile']
             coverf = request.files['coverfile']
             musicf.save(os.path.join("static/musics/", musicf.filename))
-            coverf.save(os.path.join("static/covers/", coverf.filename))
+            coverf.save(os.path.join("static/images/", coverf.filename))
 
             music = MusicModel.query.get(music_id)
             music.MusicName = form.MusicName.data

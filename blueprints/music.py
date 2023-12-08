@@ -37,6 +37,8 @@ def single(id):
         
         base_path = "../static/musics/"
         audio_url = base_path + song.StorageLocation
-        user_permissions = check_permissions_for_user(id, g.user.UserID) # 查询用户权限->下载、评论
+        user_permissions = False
+        if g.user:
+            user_permissions = check_permissions_for_user(id, g.user.UserID) # 查询用户权限->下载、评论
         
         return render_template('single.html', song=song, singer=singer,audio_url=audio_url,musicid=id,permissions=user_permissions)

@@ -111,9 +111,10 @@ background-attachment: fixed;" background="../static/covers/{{song.Cover}}.jpg" 
 <table cellspacing="7" cellpadding="15" border="7px" bordercolor="#FFFFFF">
 
 <tr>
-
+    {% if not permissions %}
 	<td><a href="#" id="musicButton"><font color="#FFFFFF">音乐试听</font></a></td>
 	<td><a href="#" id="orderButton" onclick=""><font color="#FFFFFF">购买歌曲</font></a></td>
+    {% endif %}
 	<td><a href="#评论"><font color="#FFFFFF">查看评论</font></a></td>
 
 </table>

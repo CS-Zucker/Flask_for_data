@@ -11,7 +11,7 @@ bp = Blueprint("admin", __name__, url_prefix="/admin")
 def admin_home():
     return redirect(url_for("admin.admin_index"))
 
-@bp.route("/index")  # 就是把session信息全部清除
+@bp.route("/index")
 def admin_index():
     return render_template("admin_index.html")
 
@@ -25,14 +25,14 @@ def admin_login():
         if form.validate():
             adminID = form.AdminId.data
             password = form.Password.data
-            admin = Admin.query.filter_by(AdminID=adminID).first()  # 查找AdminID
+            admin = Admin.query.filter_by(AdmID=adminID).first()  # 查找AdminID
             if not admin:  # 管理员不存在
                 print("管理员不存在")
                 return redirect(url_for("admin.admin_login"))
             else:
-                if admin.Password == password:
+                if admin.Aassword == password:
                     # cookie用来存放登录授权的信息,cookie在浏览器里存储，这样就知道登录的用户是谁了
-                    session['admin_id'] = admin.AdminID
+                    session['admin_id'] = admin.AdmID
                     return redirect(url_for("admin.admin_index"))
                 else:
                     print("密码错误")

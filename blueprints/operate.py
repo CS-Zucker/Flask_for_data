@@ -164,8 +164,15 @@ def music_search(music_id):
     if request.method == 'GET':
         musicid = music_id
         musicname = music_id
-        musics = MusicModel.query.filter(or_(MusicModel.MusicID.contains(musicid), MusicModel.MusicName.contains(musicname)))
-        return render_template("music-list.html", musics=musics, paginate=None)
+        page = request.args.get("page", type=int, default=1)   # 当没有参数时默认为一,转成整形很重要
+        # 分页器对象 
+        paginate = db.session.query(MusicModel, SingerModel).\
+            join(SingingModel, MusicModel.MusicID == SingingModel.MusicID).\
+            join(SingerModel, SingerModel.SingerID == SingingModel.SingerID).\
+            filter(or_(MusicModel.MusicID.contains(musicid), MusicModel.MusicName.contains(musicname))).\
+            paginate(page=page, per_page=12)
+        
+        return render_template("music-list.html", paginate=paginate)  # 把paginate对象传到前端
     else:
         music_id = request.form.get("musicid")  # 要搜索音乐id
         if music_id == '':

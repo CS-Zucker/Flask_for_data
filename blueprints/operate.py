@@ -201,17 +201,19 @@ def music_add():
             price = form.price.data
             issuetime = form.IssueTime.data
             storagelocation = os.path.join(musicf.filename)
-            coverlocation = os.path.join(coverf.filename)[:4]
+            coverlocation = coverf.filename.split('.')[0]
             
             singerid = form.SingerID.data
             singername = form.Singer.data
             singersex = form.SingerSex.data
+            singerflag = SingerModel.query.filter_by(SingerID=singerid).first()  # 返回第一个歌手
             
             music = MusicModel(MusicID=musicid, MusicName=musicname, ClassID=classid, Intro=intro, price=price, IssueTime=issuetime, StorageLocation=storagelocation, Cover=coverlocation)
-            singer = SingerModel(SingerID=singerid, Singer=singername, SingerSex=singersex)
+            if not singerflag:
+                singer = SingerModel(SingerID=singerid, Singer=singername, SingerSex=singersex)
+                db.session.add(singer)
             singing = SingingModel(SingerID=singerid, MusicID=musicid)
             db.session.add(music)
-            db.session.add(singer)
             db.session.add(singing)
             db.session.commit()
             flash("音乐添加成功！")  # 添加Flash消息
@@ -247,7 +249,7 @@ def music_edit(music_id, singer_id):
             singer.SingerSex = form.SingerSex.data
             
             music.StorageLocation = os.path.join(musicf.filename)
-            music.Cover = os.path.join(coverf.filename)[:4]
+            music.Cover = os.path.join(coverf.filename).split('.')[0]
             db.session.commit()
             flash("音乐修改成功！")  # 添加Flash消息
             return redirect(url_for("operate.music_list"))  # 把视图函数转换成url 蓝图.视图函数

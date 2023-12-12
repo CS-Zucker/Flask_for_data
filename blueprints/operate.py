@@ -615,3 +615,118 @@ def order_delete(order_id):
     db.session.delete(drop_order)
     db.session.commit()
     return redirect(url_for("operate.order_list"))
+
+
+# 显示所有榜单的信息
+@bp.route('/chart_list',methods=['GET','POST'])
+def chart_list():
+    if request.method == 'GET':
+        page = request.args.get("page", type=int, default=1)   # 当没有参数时默认为一,转成整形很重要，默认为string
+        # 分页器对象 
+        paginate = db.session.query(ChartModel, CRankModel, MusicModel, SingerModel).\
+                join(CRankModel, ChartModel.ChartID == CRankModel.ChartID).\
+                join(MusicModel, CRankModel.MusicID == MusicModel.MusicID).\
+                join(SingingModel, SingingModel.MusicID == MusicModel.MusicID).\
+                join(SingerModel, SingingModel.SingerID == SingerModel.SingerID).\
+                order_by(ChartModel.ChartID, CRankModel.SongRanking).\
+                paginate(page=page, per_page=12)
+        return render_template("chart-list.html", paginate=paginate)  # 把paginate对象传到前端
+    else:
+        chart_id = request.form.get("chartid")  # 要搜索榜单id
+        if chart_id == '':
+            flash("请输入数据")
+            return redirect(url_for("operate.chart_list"))  # 当没有
+        else:
+            charts = ChartModel.query.filter(or_(ChartModel.ChartID == chart_id, ChartModel.ChartType == chart_id))
+            if not charts:
+                flash("不存在此榜单")
+                redirect(url_for("operate.chart_list"))
+            else:
+                return redirect(url_for("operate.chart_search", chart_id=chart_id))
+
+
+# 删除指定登榜的信息
+@bp.route('/chart_delete/<string:music_id>&<string:chart_id>')
+def chart_delete(music_id, chart_id):
+    drop_crank = CRankModel.query.filter(and_(CRankModel.MusicID==music_id, CRankModel.ChartID==chart_id)).first()  # 删除登榜
+    db.session.delete(drop_crank)
+    db.session.commit()
+    return redirect(url_for("operate.chart_list"))
+
+# 搜索榜单信息
+@bp.route('/chart_search/<string:chart_id>',methods=['GET','POST'])
+def chart_search(chart_id):
+    if request.method == 'GET':
+        chartid = chart_id
+        chartname = chart_id
+        page = request.args.get("page", type=int, default=1)   # 当没有参数时默认为一,转成整形很重要
+        # 分页器对象 
+        paginate = db.session.query(ChartModel, CRankModel, MusicModel, SingerModel).\
+                join(CRankModel, ChartModel.ChartID == CRankModel.ChartID).\
+                join(MusicModel, CRankModel.MusicID == MusicModel.MusicID).\
+                join(SingingModel, SingingModel.MusicID == MusicModel.MusicID).\
+                join(SingerModel, SingingModel.SingerID == SingerModel.SingerID).\
+                filter(or_(ChartModel.ChartID.contains(chartid), ChartModel.ChartType.contains(chartname))).\
+                order_by(ChartModel.ChartID, CRankModel.SongRanking).\
+                paginate(page=page, per_page=12)
+        return render_template("chart-list.html", paginate=paginate)  # 把paginate对象传到前端
+    else:
+        chart_id = request.form.get("chartid")  # 要搜索榜单id
+        if chart_id == '':
+            flash("请输入数据")
+            return redirect(url_for("operate.chart_list"))  # 当没有
+        else:
+            return redirect(url_for("operate.chart_search", chart_id=chart_id))
+        
+# 添加榜单 
+@bp.route('/chart_add',methods=['GET','POST'])
+def chart_add():
+    if request.method == 'GET':
+        return render_template('chart-add.html')
+    else:
+        form = AddChartForm(request.form)  # 获取前端榜单提交的form数据扔给registerform进行验证
+        if form.validate():  # 调用验证器和验证函数
+            chartid = form.ChartID.data
+            charttype = form.ChartType.data
+            musicid = form.MusicID.data
+            musicnmae = form.MusicName.data
+            songrank = form.SongRanking.data       
+            chartflag = ChartModel.query.filter_by(ChartID=chartid).first()  # 检索榜单是否存在
+            
+            if not chartflag:
+                chart = ChartModel(ChartID=chartid, ChartType=charttype)
+                db.session.add(chart)
+            crank = CRankModel(MusicID=musicid, ChartID=chartid, SongRanking=songrank)
+            db.session.add(crank)
+            db.session.commit()
+            flash("榜单添加成功！")  # 添加Flash消息
+            return redirect(url_for("operate.chart_list"))  # 把视图函数转换成url 蓝图.视图函数
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'错误：{error} ')
+            return redirect(url_for("operate.chart_add"))
+
+# 修改榜单信息 
+@bp.route('/chart_edit/<string:music_id>?<string:chart_id>',methods=['GET','POST'])
+def chart_edit(music_id, chart_id):
+    if request.method == 'GET':
+        return render_template('chart-edit.html')
+    else:
+        form = EditChartForm(request.form)  # 获取前端榜单提交的form数据扔给registerform进行验证
+        if form.validate():  # 调用验证器和验证函数
+            crank = CRankModel.query.filter(and_(CRankModel.MusicID==music_id, CRankModel.ChartID==chart_id)).first()  # 修改登榜
+            crank.SongRanking = form.SongRanking.data
+            
+            chart = ChartModel.query.get(chart_id)
+            chart.ChartType = form.ChartType.data
+            
+            db.session.commit()
+            flash("榜单修改成功！")  # 添加Flash消息
+            return redirect(url_for("operate.chart_list"))  # 把视图函数转换成url 蓝图.视图函数
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'错误：{error} ')
+            print(form.errors)
+            return redirect(url_for("operate.chart_edit", chart_id=chart_id))

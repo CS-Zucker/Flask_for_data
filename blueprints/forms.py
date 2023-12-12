@@ -1,6 +1,7 @@
 import wtforms
 from flask import g
 from wtforms.validators import Email, Length, EqualTo, AnyOf, NumberRange, DataRequired
+from sqlalchemy import and_
 from models import *
 from exts import db
 # 获取前端数据验证前端数据是否符合要求
@@ -154,16 +155,44 @@ class EditMusicForm(wtforms.Form):  # 继承wtforms.Form
     Singer = wtforms.StringField(validators=[Length(min=1, max=30, message="歌手名格式错误")])
     SingerSex = wtforms.StringField(validators=[AnyOf(['男', '女'], message="歌手性别格式错误")])
 
-    def validate_MusicID(self, filed):
-        MusicID = filed.data
-        music = MusicModel.query.filter_by(MusicID=MusicID).first()  # 返回第一个与邮箱一样
-        if music:  # 不为空
-            raise wtforms.ValidationError(message="该音乐ID已存在")  # 抛出异常
     def validate_ClassID(self, filed):
         ClassID = filed.data
         add_class = ClassModel.query.filter_by(ClassID=ClassID).first()  # 返回第一个与邮箱一样
         if add_class is None:  # 为空
             raise wtforms.ValidationError(message="该类别ID不存在")  # 抛出异常
+
+# 添加榜单验证 
+class AddChartForm(wtforms.Form):  # 继承wtforms.Form
+    ChartID = wtforms.StringField(validators=[Length(min=1, max=5, message="榜单ID格式错误")])
+    ChartType = wtforms.StringField(validators=[Length(min=1, max=30, message="榜单名格式错误")])
+    MusicID = wtforms.StringField(validators=[Length(min=5, max=5, message="音乐ID格式错误")])
+    MusicName = wtforms.StringField(validators=[Length(min=1, max=30, message="音乐名格式错误")])
+    SongRanking = wtforms.DecimalField(validators=[NumberRange(min=1, max=10, message="排名格式错误")])  # 1-10数字验证
+    
+    def validate_MusicID(self, filed):
+        MusicID = filed.data
+        music = MusicModel.query.filter_by(MusicID=MusicID).first()  # 
+        if not music:  # 为空
+            raise wtforms.ValidationError(message="该音乐ID不存在")  # 抛出异常
+        if music.MusicName != self.MusicName.data:  # 不相等
+            raise wtforms.ValidationError(message="该音乐名与ID不符")  # 抛出异常
+    def validate_SongRanking(self, filed):
+        SongRanking = filed.data
+        crank = CRankModel.query.filter(and_(CRankModel.ChartID==self.ChartID.data, CRankModel.SongRanking==SongRanking)).count()  # 返回第一个音乐
+        if crank > 0:  # 不为空
+            raise wtforms.ValidationError(message="该榜单此排名已存在歌曲,请先做删除或修改处理")  # 抛出异常
+    def validate_ChartType(self, filed):
+        ChartType = filed.data
+        chart = ChartModel.query.filter_by(ChartID=self.ChartID.data).first()  # 
+        if chart.ChartType != ChartType:  # 为空
+            raise wtforms.ValidationError(message="该榜单名与ID不符")  # 抛出异常  
+
+
+# 修改榜单验证 
+class EditChartForm(wtforms.Form):  # 继承wtforms.Form
+    ChartType = wtforms.StringField(validators=[Length(min=1, max=30, message="榜单名格式错误")])
+    SongRanking = wtforms.DecimalField(validators=[NumberRange(min=1, max=10, message="排名格式错误")])  # 1-10数字验证
+
 
 
 # 添加评论验证

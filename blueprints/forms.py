@@ -188,6 +188,19 @@ class AddChartForm(wtforms.Form):  # 继承wtforms.Form
             raise wtforms.ValidationError(message="该榜单名与ID不符")  # 抛出异常  
 
 
+
+# 添加榜单验证
+class AddChartForm_(wtforms.Form):  # 继承wtforms.Form
+    ChartID = wtforms.StringField(validators=[Length(min=1, max=5, message="榜单ID格式错误")])
+    ChartType = wtforms.StringField(validators=[Length(min=1, max=30, message="榜单名格式错误")])
+
+    def validate_ChartType(self, filed):
+
+        chart = ChartModel.query.filter_by(ChartID=self.ChartID.data).first()
+        if chart:  # 不为空
+            raise wtforms.ValidationError(message="榜单ID已经存在")  # 抛出异常
+
+
 # 修改榜单验证 
 class EditChartForm(wtforms.Form):  # 继承wtforms.Form
     ChartType = wtforms.StringField(validators=[Length(min=1, max=30, message="榜单名格式错误")])
@@ -198,3 +211,7 @@ class EditChartForm(wtforms.Form):  # 继承wtforms.Form
 # 添加评论验证
 class AddCommentForm(wtforms.Form):  # 继承wtforms.Form
     Content = wtforms.StringField(validators=[Length(min=1, max=200, message="评论内容过长，1~200")])
+
+# 修改榜单验证
+class EditChartForm_(wtforms.Form):  # 继承wtforms.Form
+    ChartType = wtforms.StringField(validators=[Length(min=1, max=30, message="榜单名格式错误")])

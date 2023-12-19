@@ -64,9 +64,8 @@
 								<th>
 									<p>
 										<font color="#DC143C" face="微软雅黑" size="10">X</font>
-									</p><a href="index">
+									</p>
 										<font color="#FFFFFF" face="等线" size="8"><b>{{ chart_type }}>></b></font>
-									</a>
 									<p>
 										<font color="#DC143C" face="微软雅黑" size="10">X</font>
 									</p>
@@ -76,12 +75,12 @@
 							{% for music_info in music_info_list %}
 							<tr>
 								<td>
-									<font color="#DC143C" face="等线" size="6"><b>{{ music_info.MusicRank }}</b></font><a href="single">
+									<font color="#DC143C" face="等线" size="6"><b>{{ music_info.MusicRank }}</b></font><a href="single/{{ music_info.MusicRank }}">
 										<font color="#FFFFFF" face="等线" size="4">{{ music_info.MusicName }}</font>
 									</a>
-									<p><a href="singer">
-											<font color="#A9A9A9" face="微软雅黑" size="2">{{ music_info.Singer }}</font>
-										</a></p>
+									<p>
+										<font color="#A9A9A9" face="微软雅黑" size="2">{{ music_info.Singer }}</font>
+									</p>
 								</td>
 							</tr>
 							{% endfor %}

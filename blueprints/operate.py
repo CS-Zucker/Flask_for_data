@@ -677,12 +677,76 @@ def chart_search(chart_id):
             return redirect(url_for("operate.chart_list"))  # 当没有
         else:
             return redirect(url_for("operate.chart_search", chart_id=chart_id))
-        
+
+# 渲染榜单
+@bp.route('/chart_list_')
+def chart_list_():
+    charts = ChartModel.query.all()
+    return render_template("chart-list_.html",charts=charts)
+
+
+# 删除榜单
+@bp.route('/chart_delete_/<string:chart_id>')
+def chart_delete_(chart_id):
+    chart = ChartModel.query.get(chart_id)
+    #先把登榜的歌曲删掉
+    charts = CRankModel.query.filter(CRankModel.ChartID == chart_id).all()
+    for char in charts:
+        db.session.delete(char)
+        db.session.commit()
+    db.session.delete(chart)
+    db.session.commit()
+    flash("删除成功！")
+    return redirect(url_for("operate.chart_list_"))
+
+
+# 修改榜单
+@bp.route('/chart_edit_/<string:chart_id>', methods=['GET', 'POST'])
+def chart_edit_(chart_id):
+    if request.method == 'GET':
+        return render_template('chart-edit_.html')
+    else:
+        form = EditChartForm_(request.form)  # 获取前端榜单提交的form数据扔给registerform进行验证
+        if form.validate():  # 调用验证器和验证函数
+            chart = ChartModel.query.get(chart_id)
+            charttype = form.ChartType.data
+            chart.ChartType = charttype
+            db.session.commit()
+            flash("榜单修改成功！")  # 添加Flash消息
+            return redirect(url_for("operate.chart_list_"))  # 把视图函数转换成url 蓝图.视图函数
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'错误：{error} ')
+            print(form.errors)
+            return redirect(url_for("operate.chart_edit_", chart_id=chart_id))
 # 添加榜单 
 @bp.route('/chart_add',methods=['GET','POST'])
 def chart_add():
     if request.method == 'GET':
         return render_template('chart-add.html')
+    else:
+        form = AddChartForm_(request.form)  # 获取前端榜单提交的form数据扔给registerform进行验证
+        if form.validate():  # 调用验证器和验证函数
+            chartid = form.ChartID.data
+            charttype = form.ChartType.data
+            chart = ChartModel(ChartID=chartid, ChartType=charttype)
+            db.session.add(chart)
+            db.session.commit()
+            flash("榜单添加成功！")  # 添加Flash消息
+            return redirect(url_for("operate.chart_list_"))  # 把视图函数转换成url 蓝图.视图函数
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'错误：{error} ')
+            return redirect(url_for("operate.chart_add"))
+
+
+# 榜单添加音乐
+@bp.route('/chart_add_music', methods=['GET', 'POST'])
+def chart_add_music():
+    if request.method == 'GET':
+        return render_template('chart-add-music.html')
     else:
         form = AddChartForm(request.form)  # 获取前端榜单提交的form数据扔给registerform进行验证
         if form.validate():  # 调用验证器和验证函数
@@ -690,9 +754,9 @@ def chart_add():
             charttype = form.ChartType.data
             musicid = form.MusicID.data
             musicnmae = form.MusicName.data
-            songrank = form.SongRanking.data       
+            songrank = form.SongRanking.data
             chartflag = ChartModel.query.filter_by(ChartID=chartid).first()  # 检索榜单是否存在
-            
+
             if not chartflag:
                 chart = ChartModel(ChartID=chartid, ChartType=charttype)
                 db.session.add(chart)
@@ -705,9 +769,10 @@ def chart_add():
             for field, errors in form.errors.items():
                 for error in errors:
                     flash(f'错误：{error} ')
-            return redirect(url_for("operate.chart_add"))
+            return redirect(url_for("chart_add_music"))
 
-# 修改榜单信息 
+
+# 修改榜单信息
 @bp.route('/chart_edit/<string:music_id>?<string:chart_id>',methods=['GET','POST'])
 def chart_edit(music_id, chart_id):
     if request.method == 'GET':
@@ -730,3 +795,153 @@ def chart_edit(music_id, chart_id):
                     flash(f'错误：{error} ')
             print(form.errors)
             return redirect(url_for("operate.chart_edit", chart_id=chart_id))
+
+@bp.route('/singer_list_')
+def singer_list_():
+
+    singers =SingerModel.query.all()
+    return render_template("singer-list_.html",singers=singers)
+
+@bp.route('/singer_add', methods=['GET', 'POST'])
+def singer_add():
+    if request.method == 'GET':
+        return render_template('singer-add.html')
+    else:
+        singer_id = request.form.get('SingerID')
+        singer_name = request.form.get('Singer')
+        singer_sex = request.form.get('SingerSex')
+
+        new_singer = SingerModel(SingerID=singer_id, Singer=singer_name, SingerSex=singer_sex)
+        db.session.add(new_singer)
+        db.session.commit()
+
+        flash("歌手添加成功！")  # 添加Flash消息
+        return redirect(url_for("operate.singer_list_"))  # 把视图函数转换成url 蓝图.视图函数
+
+@bp.route('/singer_edit_/<string:singer_id>', methods=['GET', 'POST'])
+def singer_edit_(singer_id):
+    if request.method == 'GET':
+        singer = SingerModel.query.get_or_404(singer_id)
+        return render_template('singer-edit_.html',singer=singer)
+    else:
+        singer = SingerModel.query.get_or_404(singer_id)
+
+        new_singer_name = request.form.get('Singer')
+        new_singer_sex = request.form.get('SingerSex')
+
+        singer.Singer = new_singer_name
+        singer.SingerSex = new_singer_sex
+
+        db.session.commit()
+
+        flash("歌手信息修改成功！")
+        return redirect(url_for("operate.singer_list_"))
+
+
+@bp.route('/singer_delete_/<string:singer_id>')
+def singer_delete_(singer_id):
+    sin = SingerModel.query.get(singer_id)
+
+    # 删除与歌手相关的演唱记录
+    singers = SingingModel.query.filter(SingingModel.SingerID == singer_id).all()
+    for singer in singers:
+        # 删除与演唱记录相关的下单记录
+        orders = OrderingModel.query.filter(OrderingModel.MusicID == singer.MusicID).all()
+        for order in orders:
+            db.session.delete(order)
+            db.session.commit()
+
+        # 删除演唱记录
+        db.session.delete(singer)
+        db.session.commit()
+
+    # 删除与歌手相关的音乐
+    music_ids = [singer.MusicID for singer in singers]
+    musics = MusicModel.query.filter(MusicModel.MusicID.in_(music_ids)).all()
+    for music in musics:
+        db.session.delete(music)
+        db.session.commit()
+
+    # 删除歌手记录
+    db.session.delete(sin)
+    db.session.commit()
+
+    flash("删除成功！")
+    return redirect(url_for("operate.singer_list_"))
+
+@bp.route('/singer_search',methods=['GET','POST'])
+def singer_search():
+    if request.method == 'GET':
+        singer_id = request.args.get("singer_id", '')
+        singerid = singer_id
+        singername = singer_id
+        page = request.args.get("page", type=int, default=1)   # 当没有参数时默认为一,转成整形很重要
+        # 分页器对象
+        singers = db.session.query(SingerModel). \
+            filter(or_(SingerModel.SingerID == singerid, SingerModel.Singer == singername)). \
+            order_by(SingerModel.SingerID). \
+            paginate(page=page, per_page=12)
+        return render_template("singer-list_.html", singers=singers)  # 把paginate对象传到前端
+    elif request.method == 'POST':
+        singer_id = request.form['singer_id']
+        if not singer_id:
+            flash("请输入数据")
+            return redirect(url_for("operate.singer_list_"))
+        else:
+            return redirect(url_for("operate.singer_search", singer_id=singer_id))
+
+
+@bp.route('/class_list')
+def class_list():
+    classes =ClassModel.query.all()
+    return render_template("class-list.html",classes=classes)
+
+@bp.route('/class_add', methods=['GET', 'POST'])
+def class_add():
+    if request.method == 'GET':
+        return render_template('class-add.html')
+    else:
+        class_id = request.form.get('ClassID')
+        type_name = request.form.get('TyprName')
+
+        new_class = ClassModel(ClassID=class_id, TyprName=type_name)
+        db.session.add(new_class)
+        db.session.commit()
+
+        flash("音乐类型添加成功！")  # 添加Flash消息
+        return redirect(url_for("operate.class_list"))  # 把视图函数转换成url 蓝图.视图函数
+
+@bp.route('/class_edit/<string:class_id>', methods=['GET', 'POST'])
+def class_edit(class_id):
+    if request.method == 'GET':
+        edit_class = ClassModel.query.get_or_404(class_id)
+        return render_template('class-edit.html',edit_class=edit_class)
+    else:
+        edit_class = ClassModel.query.get_or_404(class_id)
+        new_type_name = request.form.get('TypeName')
+        edit_class.TypeName = new_type_name
+        db.session.commit()
+        flash("音乐类型信息修改成功！")
+        return redirect(url_for("operate.class_list"))
+
+
+@bp.route('/class_search',methods=['GET','POST'])
+def class_search():
+    if request.method == 'GET':
+        class_id = request.args.get("class_id")
+        classid = class_id
+        typename = class_id
+        page = request.args.get("page", type=int, default=1)   # 当没有参数时默认为一,转成整形很重要
+        # 分页器对象
+        classes = db.session.query(ClassModel). \
+            filter(or_(ClassModel.ClassID == classid, ClassModel.TypeName == typename)). \
+            order_by(ClassModel.ClassID). \
+            paginate(page=page, per_page=12)
+        return render_template("class-list.html", classes=classes)  # 把paginate对象传到前端
+    elif request.method == 'POST':
+        class_id = request.form['class_id']
+        if not class_id:
+            flash("请输入数据")
+            return redirect(url_for("operate.class_list"))
+        else:
+            return redirect(url_for("operate.class_search", class_id=class_id))

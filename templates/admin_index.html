@@ -91,9 +91,49 @@
             <li>
                 <a href="javascript:;">
                     <i class="iconfont">&#xe723;</i>
+                    <cite>类型管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="{{url_for('operate.class_list')}}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>音乐类型列表</cite>
+                        </a>
+                    </li >
+                </ul>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe723;</i>
+                    <cite>歌手管理</cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="{{url_for('operate.singer_list_')}}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>歌手列表</cite>
+                        </a>
+                    </li >
+                </ul>
+            </li>
+
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont">&#xe723;</i>
                     <cite>榜单管理</cite>
                     <i class="iconfont nav_right">&#xe697;</i>
                 </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a _href="{{url_for('operate.chart_list_')}}">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>榜单编辑</cite>
+                        </a>
+                    </li >
+                </ul>
                 <ul class="sub-menu">
                     <li>
                         <a _href="{{url_for('operate.chart_list')}}">
